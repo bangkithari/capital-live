@@ -1,0 +1,1512 @@
+USE [master]
+GO
+/****** Object:  Database [CLI_INDIVIDU]    Script Date: 6/2/2026 11:18:33 PM ******/
+CREATE DATABASE [CLI_INDIVIDU]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'CLI_INDIVIDU', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\CLI_INDIVIDU.mdf' , SIZE = 73728KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'CLI_INDIVIDU_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\CLI_INDIVIDU_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET COMPATIBILITY_LEVEL = 160
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [CLI_INDIVIDU].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET RECOVERY FULL 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET  MULTI_USER 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET ACCELERATED_DATABASE_RECOVERY = OFF  
+GO
+EXEC sys.sp_db_vardecimal_storage_format N'CLI_INDIVIDU', N'ON'
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET QUERY_STORE = ON
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, WAIT_STATS_CAPTURE_MODE = ON)
+GO
+USE [CLI_INDIVIDU]
+GO
+/****** Object:  Table [dbo].[aplikasi]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[aplikasi](
+	[aplikasi_id] [varchar](16) NOT NULL,
+	[nomor_spaj] [nvarchar](50) NOT NULL,
+	[kode_plan] [nvarchar](50) NOT NULL,
+	[no_pemegang_polis] [varchar](16) NOT NULL,
+	[no_tertanggung] [varchar](16) NULL,
+	[no_agen] [nvarchar](16) NULL,
+	[tujuan_asuransi] [nvarchar](50) NULL,
+	[usia_th] [int] NULL,
+	[tanggal_mulai_pertanggungan] [date] NULL,
+	[tanggal_akhir_pertanggungan] [date] NULL,
+	[kode_mata_uang] [nvarchar](3) NULL,
+	[premi] [decimal](18, 2) NULL,
+	[nilai_kurs] [decimal](18, 2) NULL,
+	[tenor_bulan] [int] NULL,
+	[frekuensi_pembayaran_bulan] [int] NULL,
+	[rate_pengajuan] [decimal](18, 4) NULL,
+	[rate_komisi] [decimal](18, 4) NULL,
+	[status_aplikasi] [int] NULL,
+	[no_polis_ref] [nvarchar](50) NULL,
+	[tgl_pengajuan] [datetime] NULL,
+	[tgl_dana] [datetime] NULL,
+	[tgl_underwrite] [datetime] NULL,
+	[catatan_underwrite] [varchar](100) NULL,
+	[user_underwrite] [varchar](100) NULL,
+ CONSTRAINT [PK__aplikasi__11FE655EA5911432] PRIMARY KEY CLUSTERED 
+(
+	[aplikasi_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[aplikasi_ahli_waris]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[aplikasi_ahli_waris](
+	[aplikasi_ahli_waris_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[aplikasi_id] [varchar](16) NOT NULL,
+	[cif_id] [varchar](16) NOT NULL,
+	[no_urut] [int] NOT NULL,
+	[persentase] [decimal](5, 2) NOT NULL,
+	[created_at] [datetime] NOT NULL,
+ CONSTRAINT [PK_aplikasi_ahli_waris] PRIMARY KEY CLUSTERED 
+(
+	[aplikasi_ahli_waris_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[aplikasi_cif]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[aplikasi_cif](
+	[aplikasi_cif_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[aplikasi_id] [varchar](16) NOT NULL,
+	[cif_id] [varchar](16) NOT NULL,
+	[nama_lengkap] [nvarchar](150) NOT NULL,
+	[jenis_kelamin] [char](1) NULL,
+	[tempat_lahir] [nvarchar](100) NULL,
+	[tanggal_lahir] [date] NULL,
+	[nama_gadis_ibu_kandung] [nvarchar](150) NULL,
+	[status_perkawinan] [nvarchar](20) NULL,
+	[agama] [nvarchar](30) NULL,
+	[kewarganegaraan] [nvarchar](10) NOT NULL,
+	[negara_asal] [nvarchar](100) NULL,
+	[email] [nvarchar](150) NULL,
+	[nomor_hp] [nvarchar](30) NULL,
+	[jenis_identitas] [nvarchar](30) NOT NULL,
+	[nomor_identitas] [nvarchar](50) NOT NULL,
+	[npwp] [nvarchar](16) NULL,
+	[jenis_pekerjaan] [nvarchar](50) NOT NULL,
+	[nama_perusahaan] [nvarchar](150) NULL,
+	[alamat_perusahaan] [nvarchar](300) NULL,
+	[bidang_usaha] [nvarchar](150) NULL,
+	[jabatan] [nvarchar](100) NULL,
+	[nama_bank] [nvarchar](100) NOT NULL,
+	[nomor_rekening] [nvarchar](50) NOT NULL,
+	[mata_uang] [nvarchar](10) NOT NULL,
+	[nama_pemilik_rekening] [nvarchar](150) NOT NULL,
+	[created_by] [nvarchar](100) NOT NULL,
+	[created_at] [datetime] NOT NULL,
+	[updated_by] [nvarchar](100) NULL,
+	[updated_at] [datetime] NULL,
+ CONSTRAINT [PK_aplikasi_cif] PRIMARY KEY CLUSTERED 
+(
+	[aplikasi_cif_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[aplikasi_cif_address]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[aplikasi_cif_address](
+	[aplikasi_cif_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[aplikasi_id] [varchar](16) NOT NULL,
+	[cif_id] [varchar](16) NOT NULL,
+	[address_type] [varchar](20) NOT NULL,
+	[is_primary] [bit] NOT NULL,
+	[alamat_lengkap] [varchar](255) NOT NULL,
+	[rt] [varchar](3) NULL,
+	[rw] [varchar](3) NULL,
+	[kelurahan] [varchar](100) NULL,
+	[kecamatan] [varchar](100) NULL,
+	[kota_kabupaten] [varchar](100) NULL,
+	[provinsi] [varchar](100) NULL,
+	[kode_pos] [varchar](10) NULL,
+	[negara] [varchar](100) NULL,
+	[no_telp] [varchar](20) NULL,
+	[created_by] [nvarchar](100) NOT NULL,
+	[created_at] [datetime] NOT NULL,
+	[updated_by] [nvarchar](100) NULL,
+	[updated_at] [datetime] NULL,
+ CONSTRAINT [PK_aplikasi_cif_address] PRIMARY KEY CLUSTERED 
+(
+	[aplikasi_cif_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[aplikasi_document]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[aplikasi_document](
+	[document_aplikasi_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[aplikasi_id] [varchar](16) NOT NULL,
+	[document_type] [varchar](50) NOT NULL,
+	[document_name] [varchar](150) NOT NULL,
+	[file_path] [varchar](500) NOT NULL,
+	[file_extension] [varchar](10) NOT NULL,
+	[file_size_kb] [int] NULL,
+	[uploaded_by] [varchar](100) NOT NULL,
+	[uploaded_at] [datetime] NOT NULL,
+	[remarks] [varchar](255) NULL,
+	[is_active] [bit] NOT NULL,
+ CONSTRAINT [PK_document_aplikasi] PRIMARY KEY CLUSTERED 
+(
+	[document_aplikasi_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[cif]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[cif](
+	[cif_id] [varchar](16) NOT NULL,
+	[nama_lengkap] [nvarchar](150) NOT NULL,
+	[jenis_kelamin] [char](1) NULL,
+	[tempat_lahir] [nvarchar](100) NULL,
+	[tanggal_lahir] [date] NULL,
+	[nama_gadis_ibu_kandung] [nvarchar](150) NULL,
+	[status_perkawinan] [nvarchar](20) NULL,
+	[agama] [nvarchar](30) NULL,
+	[kewarganegaraan] [nvarchar](10) NOT NULL,
+	[negara_asal] [nvarchar](100) NULL,
+	[email] [nvarchar](150) NULL,
+	[nomor_hp] [nvarchar](30) NULL,
+	[jenis_identitas] [nvarchar](30) NOT NULL,
+	[nomor_identitas] [nvarchar](50) NOT NULL,
+	[npwp] [nvarchar](16) NULL,
+	[jenis_pekerjaan] [nvarchar](50) NOT NULL,
+	[nama_perusahaan] [nvarchar](150) NULL,
+	[alamat_perusahaan] [nvarchar](300) NULL,
+	[bidang_usaha] [nvarchar](150) NULL,
+	[jabatan] [nvarchar](100) NULL,
+	[nama_bank] [nvarchar](100) NOT NULL,
+	[nomor_rekening] [nvarchar](50) NOT NULL,
+	[mata_uang] [nvarchar](10) NOT NULL,
+	[nama_pemilik_rekening] [nvarchar](150) NOT NULL,
+	[created_by] [nvarchar](100) NOT NULL,
+	[created_at] [datetime] NOT NULL,
+	[updated_by] [nvarchar](100) NULL,
+	[updated_at] [datetime] NULL,
+ CONSTRAINT [PK__cif__4FFCF72A27AAC967] PRIMARY KEY CLUSTERED 
+(
+	[cif_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[cif_address]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[cif_address](
+	[address_id] [int] IDENTITY(1,1) NOT NULL,
+	[cif_id] [varchar](16) NOT NULL,
+	[address_type] [varchar](20) NOT NULL,
+	[is_primary] [bit] NOT NULL,
+	[alamat_lengkap] [varchar](255) NOT NULL,
+	[rt] [varchar](3) NULL,
+	[rw] [varchar](3) NULL,
+	[kelurahan] [varchar](100) NULL,
+	[kecamatan] [varchar](100) NULL,
+	[kota_kabupaten] [varchar](100) NULL,
+	[provinsi] [varchar](100) NULL,
+	[kode_pos] [varchar](10) NULL,
+	[negara] [varchar](100) NULL,
+	[no_telp] [varchar](20) NULL,
+	[created_by] [nvarchar](100) NOT NULL,
+	[created_at] [datetime] NOT NULL,
+	[updated_by] [nvarchar](100) NULL,
+	[updated_at] [datetime] NULL,
+ CONSTRAINT [PK__cif_addr__CAA247C8E48460F6] PRIMARY KEY CLUSTERED 
+(
+	[address_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[cif_family]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[cif_family](
+	[family_id] [int] IDENTITY(1,1) NOT NULL,
+	[cif_id_utama] [varchar](16) NOT NULL,
+	[cif_id_keluarga] [varchar](16) NOT NULL,
+	[hubungan_keluarga] [nvarchar](30) NOT NULL,
+	[created_by] [nvarchar](100) NOT NULL,
+	[created_at] [datetime] NOT NULL,
+	[updated_by] [nvarchar](100) NULL,
+	[updated_at] [datetime] NULL,
+ CONSTRAINT [PK__cif_fami__28829CD611159548] PRIMARY KEY CLUSTERED 
+(
+	[family_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[cif_pajak_wna]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[cif_pajak_wna](
+	[pajak_id] [int] IDENTITY(1,1) NOT NULL,
+	[cif_id] [varchar](16) NOT NULL,
+	[jenis_pajak] [nvarchar](30) NOT NULL,
+	[nomor_pajak] [nvarchar](50) NOT NULL,
+	[negara_pajak] [nvarchar](100) NULL,
+	[created_by] [nvarchar](100) NOT NULL,
+	[created_at] [datetime] NOT NULL,
+	[updated_by] [nvarchar](100) NULL,
+	[updated_at] [datetime] NULL,
+ CONSTRAINT [PK__cif_paja__F5E215C0F4A29D91] PRIMARY KEY CLUSTERED 
+(
+	[pajak_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[departments]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[departments](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [varchar](100) NOT NULL,
+	[code] [varchar](50) NULL,
+	[created_at] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[kurs_harian]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[kurs_harian](
+	[kurs_harian_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[kurs_date] [date] NOT NULL,
+	[currency_code] [varchar](3) NOT NULL,
+	[kurs_beli] [decimal](18, 6) NOT NULL,
+	[kurs_jual] [decimal](18, 6) NOT NULL,
+	[kurs_tengah]  AS (([kurs_beli]+[kurs_jual])/(2.0)) PERSISTED,
+	[is_active] [bit] NOT NULL,
+	[created_by] [nvarchar](100) NOT NULL,
+	[created_at] [datetime] NOT NULL,
+	[updated_by] [nvarchar](100) NULL,
+	[updated_at] [datetime] NULL,
+ CONSTRAINT [PK_kurs_harian] PRIMARY KEY CLUSTERED 
+(
+	[kurs_harian_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[master_lookup]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[master_lookup](
+	[id] [bigint] IDENTITY(1,1) NOT NULL,
+	[group_code] [varchar](50) NOT NULL,
+	[code] [varchar](50) NOT NULL,
+	[name] [varchar](100) NOT NULL,
+	[value] [varchar](100) NULL,
+	[sequence] [int] NULL,
+	[is_active] [bit] NULL,
+	[description] [varchar](255) NULL,
+	[created_at] [datetime] NULL,
+	[created_by] [varchar](50) NULL,
+	[updated_at] [datetime] NULL,
+	[updated_by] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[master_negara]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[master_negara](
+	[country_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[kd_iso3] [char](3) NOT NULL,
+	[kd_iso2] [char](2) NOT NULL,
+	[kd_iso_num] [char](3) NOT NULL,
+	[nama_negara] [varchar](150) NOT NULL,
+	[is_active] [bit] NULL,
+	[created_at] [datetime] NULL,
+	[created_by] [varchar](50) NULL,
+	[updated_at] [datetime] NULL,
+	[updated_by] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[country_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[master_produk]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[master_produk](
+	[kode_produk] [varchar](20) NOT NULL,
+	[nama_produk] [varchar](100) NOT NULL,
+	[kode_mata_uang] [char](3) NOT NULL,
+	[no_rekening_penerima] [varchar](20) NULL,
+	[premi_min] [decimal](18, 2) NULL,
+	[premi_max] [decimal](18, 2) NULL,
+	[keterangan] [varchar](255) NULL,
+	[status] [varchar](10) NOT NULL,
+	[created_by] [varchar](100) NULL,
+	[created_at] [datetime] NULL,
+	[updated_by] [varchar](100) NULL,
+	[updated_at] [datetime] NULL,
+ CONSTRAINT [PK_master_produk] PRIMARY KEY CLUSTERED 
+(
+	[kode_produk] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[master_produk_plan]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[master_produk_plan](
+	[kode_produk] [varchar](20) NOT NULL,
+	[kode_plan] [varchar](30) NOT NULL,
+	[nama_plan] [varchar](100) NOT NULL,
+	[frekuensi_pembayaran_bulan] [int] NOT NULL,
+	[tenor_bulan] [int] NOT NULL,
+	[butuh_konfirmasi_cair] [char](1) NOT NULL,
+	[batas_konfirmasi_hari] [int] NOT NULL,
+	[keterangan] [varchar](255) NULL,
+	[status] [varchar](10) NULL,
+	[created_by] [varchar](100) NULL,
+	[created_at] [datetime] NULL,
+	[updated_by] [varchar](100) NULL,
+	[updated_at] [datetime] NULL,
+ CONSTRAINT [PK_master_produk_plan] PRIMARY KEY CLUSTERED 
+(
+	[kode_produk] ASC,
+	[kode_plan] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[menus]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[menus](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[parent_id] [int] NULL,
+	[name] [varchar](100) NOT NULL,
+	[code] [varchar](100) NOT NULL,
+	[url] [varchar](255) NULL,
+	[controller] [varchar](50) NULL,
+	[action] [varchar](50) NULL,
+	[param] [int] NULL,
+	[icon] [varchar](100) NULL,
+	[sort_order] [int] NULL,
+	[is_active] [bit] NULL,
+	[menu_type] [varchar](20) NULL,
+	[stored_procedure] [varchar](200) NULL,
+	[params_json] [nvarchar](max) NULL,
+ CONSTRAINT [PK__menus__3213E83F6E6E21B0] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[polis]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[polis](
+	[no_polis] [varchar](30) NOT NULL,
+	[aplikasi_id] [varchar](16) NOT NULL,
+	[tgl_exit] [datetime] NULL,
+	[status_polis] [int] NOT NULL,
+	[tgl_cetak] [datetime] NULL,
+	[tgl_convert] [datetime] NULL,
+	[user_convert] [varchar](100) NULL,
+	[nailai_up_max] [decimal](18, 2) NULL,
+ CONSTRAINT [PK_polis] PRIMARY KEY CLUSTERED 
+(
+	[no_polis] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[role_department_menu]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[role_department_menu](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[role_id] [int] NOT NULL,
+	[department_id] [int] NOT NULL,
+	[menu_id] [int] NOT NULL,
+	[is_access] [bit] NULL,
+ CONSTRAINT [PK__role_dep__3213E83F09FAB870] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[roles]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[roles](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [varchar](100) NOT NULL,
+	[level_role] [int] NULL,
+	[description] [varchar](255) NULL,
+	[created_at] [datetime] NULL,
+ CONSTRAINT [PK__roles__3213E83F1DC46AA9] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[users]    Script Date: 6/2/2026 11:18:33 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[users](
+	[user_id] [varchar](50) NOT NULL,
+	[department_id] [int] NOT NULL,
+	[role_id] [int] NOT NULL,
+	[password_hash] [varchar](255) NOT NULL,
+	[full_name] [varchar](150) NULL,
+	[email] [varchar](150) NULL,
+	[is_active] [bit] NOT NULL,
+	[created_at] [datetime] NULL,
+	[updated_at] [datetime] NULL,
+	[password_expiry_date] [datetime] NULL,
+ CONSTRAINT [PK__users__B9BE370FF4FB9443] PRIMARY KEY CLUSTERED 
+(
+	[user_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[departments] ON 
+GO
+INSERT [dbo].[departments] ([id], [name], [code], [created_at]) VALUES (1, N'IT', N'IT', CAST(N'2025-11-14T14:00:11.960' AS DateTime))
+GO
+INSERT [dbo].[departments] ([id], [name], [code], [created_at]) VALUES (2, N'Finance', N'FIN', CAST(N'2025-11-14T14:00:11.960' AS DateTime))
+GO
+INSERT [dbo].[departments] ([id], [name], [code], [created_at]) VALUES (3, N'Actuary', N'ACT', CAST(N'2025-12-05T14:30:08.327' AS DateTime))
+GO
+INSERT [dbo].[departments] ([id], [name], [code], [created_at]) VALUES (4, N'DPLK', N'DPLK', CAST(N'2025-12-05T14:30:08.330' AS DateTime))
+GO
+SET IDENTITY_INSERT [dbo].[departments] OFF
+GO
+SET IDENTITY_INSERT [dbo].[master_lookup] ON 
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (1, N'PAYMENT_PAYER', N'POLICY_HOLDER', N'Pemegang Polis', NULL, 1, 1, NULL, CAST(N'2026-02-19T10:04:35.880' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (2, N'PAYMENT_PAYER', N'INSURED', N'Tertanggung', NULL, 2, 1, NULL, CAST(N'2026-02-19T10:04:35.880' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (3, N'PAYMENT_PAYER', N'OTHER', N'Lainnya', NULL, 3, 1, NULL, CAST(N'2026-02-19T10:04:35.880' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (4, N'INCOME_SOURCE_MAIN', N'SALARY', N'Gaji', NULL, 1, 1, NULL, CAST(N'2026-02-19T10:04:41.460' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (5, N'INCOME_SOURCE_MAIN', N'BUSINESS', N'Hasil Usaha', NULL, 2, 1, NULL, CAST(N'2026-02-19T10:04:41.460' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (6, N'INCOME_SOURCE_MAIN', N'INVESTMENT', N'Hasil Investasi / Tabungan', NULL, 3, 1, NULL, CAST(N'2026-02-19T10:04:41.460' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (7, N'INCOME_SOURCE_MAIN', N'OTHER', N'Lainnya', NULL, 4, 1, NULL, CAST(N'2026-02-19T10:04:41.460' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (8, N'INCOME_RANGE', N'R1', N'= 60 Juta', N'0-60000000', 1, 1, NULL, CAST(N'2026-02-19T10:04:47.630' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (9, N'INCOME_RANGE', N'R2', N'> 60 – 180 Juta', N'60000001-180000000', 2, 1, NULL, CAST(N'2026-02-19T10:04:47.630' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (10, N'INCOME_RANGE', N'R3', N'> 180 – 360 Juta', N'180000001-360000000', 3, 1, NULL, CAST(N'2026-02-19T10:04:47.630' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (11, N'INCOME_RANGE', N'R4', N'> 360 – 600 Juta', N'360000001-600000000', 4, 1, NULL, CAST(N'2026-02-19T10:04:47.630' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (12, N'INCOME_RANGE', N'R5', N'> 600 Juta', N'>600000000', 5, 1, NULL, CAST(N'2026-02-19T10:04:47.630' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (13, N'INCOME_SOURCE_OTHER', N'NONE', N'Tidak Ada', NULL, 1, 1, NULL, CAST(N'2026-02-19T10:04:53.780' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (14, N'INCOME_SOURCE_OTHER', N'BUSINESS', N'Hasil Usaha', NULL, 2, 1, NULL, CAST(N'2026-02-19T10:04:53.780' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (15, N'INCOME_SOURCE_OTHER', N'INHERITANCE', N'Warisan', NULL, 3, 1, NULL, CAST(N'2026-02-19T10:04:53.780' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (16, N'INCOME_SOURCE_OTHER', N'COMMISSION', N'Komisi / Honor', NULL, 4, 1, NULL, CAST(N'2026-02-19T10:04:53.780' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (17, N'INCOME_SOURCE_OTHER', N'OTHER', N'Lainnya', NULL, 5, 1, NULL, CAST(N'2026-02-19T10:04:53.780' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (18, N'GENDER', N'M', N'Pria', NULL, 1, 1, NULL, CAST(N'2026-02-19T10:05:01.140' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (19, N'GENDER', N'F', N'Wanita', NULL, 2, 1, NULL, CAST(N'2026-02-19T10:05:01.140' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (20, N'MARITAL_STATUS', N'MARRIED', N'Menikah', NULL, 1, 1, NULL, CAST(N'2026-02-19T10:05:09.583' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (21, N'MARITAL_STATUS', N'SINGLE', N'Belum Kawin', NULL, 2, 1, NULL, CAST(N'2026-02-19T10:05:09.583' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (22, N'MARITAL_STATUS', N'WIDOW', N'Janda / Duda', NULL, 3, 1, NULL, CAST(N'2026-02-19T10:05:09.583' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (23, N'RELIGION', N'ISLAM', N'Islam', NULL, 1, 1, NULL, CAST(N'2026-02-19T10:05:16.953' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (24, N'RELIGION', N'CHRISTIAN', N'Kristen', NULL, 2, 1, NULL, CAST(N'2026-02-19T10:05:16.953' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (25, N'RELIGION', N'CATHOLIC', N'Katolik', NULL, 3, 1, NULL, CAST(N'2026-02-19T10:05:16.953' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (26, N'RELIGION', N'BUDDHA', N'Buddha', NULL, 4, 1, NULL, CAST(N'2026-02-19T10:05:16.953' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (27, N'RELIGION', N'HINDU', N'Hindu', NULL, 5, 1, NULL, CAST(N'2026-02-19T10:05:16.953' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (28, N'RELIGION', N'CONFUCIUS', N'Konghucu', NULL, 6, 1, NULL, CAST(N'2026-02-19T10:05:16.953' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (29, N'RELIGION', N'OTHER', N'Lainnya', NULL, 7, 1, NULL, CAST(N'2026-02-19T10:05:16.953' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (30, N'NATIONALITY', N'WNI', N'WNI', NULL, 1, 1, NULL, CAST(N'2026-02-19T10:05:23.417' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (31, N'NATIONALITY', N'WNA', N'WNA', NULL, 2, 1, NULL, CAST(N'2026-02-19T10:05:23.417' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (32, N'IDENTITY_TYPE', N'KTP', N'KTP', NULL, 1, 1, NULL, CAST(N'2026-02-19T10:05:31.287' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (33, N'IDENTITY_TYPE', N'PASSPORT', N'Paspor', NULL, 2, 1, NULL, CAST(N'2026-02-19T10:05:31.287' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (34, N'IDENTITY_TYPE', N'BIRTH_CERT', N'Akte Kelahiran', NULL, 3, 1, NULL, CAST(N'2026-02-19T10:05:31.287' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (35, N'IDENTITY_TYPE', N'OTHER', N'Lainnya', NULL, 4, 1, NULL, CAST(N'2026-02-19T10:05:31.287' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (36, N'OCCUPATION', N'PRIVATE', N'Karyawan Swasta', NULL, 1, 1, NULL, CAST(N'2026-02-19T10:05:55.650' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (37, N'OCCUPATION', N'STUDENT', N'Pelajar / Mahasiswa', NULL, 2, 1, NULL, CAST(N'2026-02-19T10:05:55.650' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (38, N'OCCUPATION', N'BUMN', N'Pegawai BUMN / BUMD', NULL, 3, 1, NULL, CAST(N'2026-02-19T10:05:55.650' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (39, N'OCCUPATION', N'HOUSEWIFE', N'Ibu Rumah Tangga', NULL, 4, 1, NULL, CAST(N'2026-02-19T10:05:55.650' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (40, N'OCCUPATION', N'TNI_POLRI', N'TNI / Polri', NULL, 5, 1, NULL, CAST(N'2026-02-19T10:05:55.650' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (41, N'OCCUPATION', N'ENTREPRENEUR', N'Wiraswasta / Pengusaha', NULL, 6, 1, NULL, CAST(N'2026-02-19T10:05:55.650' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (42, N'OCCUPATION', N'CIVIL', N'PNS', NULL, 7, 1, NULL, CAST(N'2026-02-19T10:05:55.650' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (43, N'OCCUPATION', N'RETIRED', N'Pensiunan', NULL, 8, 1, NULL, CAST(N'2026-02-19T10:05:55.650' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (44, N'OCCUPATION', N'OFFICIAL', N'Pejabat Pemerintah / DPR', NULL, 9, 1, NULL, CAST(N'2026-02-19T10:05:55.650' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (45, N'RELATIONSHIP', N'SELF', N'Diri Sendiri', NULL, 1, 1, NULL, CAST(N'2026-02-19T10:06:05.517' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (46, N'RELATIONSHIP', N'SPOUSE', N'Suami / Istri', NULL, 2, 1, NULL, CAST(N'2026-02-19T10:06:05.517' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (47, N'RELATIONSHIP', N'CHILD', N'Anak', NULL, 3, 1, NULL, CAST(N'2026-02-19T10:06:05.517' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (48, N'RELATIONSHIP', N'PARENT', N'Orang Tua', NULL, 4, 1, NULL, CAST(N'2026-02-19T10:06:05.517' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (49, N'RELATIONSHIP', N'SIBLING', N'Saudara Kandung', NULL, 5, 1, NULL, CAST(N'2026-02-19T10:06:05.517' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (50, N'RELATIONSHIP', N'OTHER', N'Lainnya', NULL, 6, 1, NULL, CAST(N'2026-02-19T10:06:05.517' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (51, N'INSURANCE_PURPOSE', N'PROTECTION', N'Proteksi', NULL, 1, 1, NULL, CAST(N'2026-02-19T10:06:11.290' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (52, N'INSURANCE_PURPOSE', N'PROTECTION_INVEST', N'Proteksi dan Investasi', NULL, 2, 1, NULL, CAST(N'2026-02-19T10:06:11.290' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (53, N'INSURANCE_PURPOSE', N'OTHER', N'Lainnya', NULL, 3, 1, NULL, CAST(N'2026-02-19T10:06:11.290' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (54, N'CURRENCY', N'IDR', N'Rupiah', NULL, 1, 1, NULL, CAST(N'2026-02-19T10:06:17.307' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_lookup] ([id], [group_code], [code], [name], [value], [sequence], [is_active], [description], [created_at], [created_by], [updated_at], [updated_by]) VALUES (55, N'CURRENCY', N'USD', N'USD', NULL, 2, 1, NULL, CAST(N'2026-02-19T10:06:17.307' AS DateTime), NULL, NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[master_lookup] OFF
+GO
+SET IDENTITY_INSERT [dbo].[master_negara] ON 
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (1, N'ABW', N'AW', N'297', N'Aruba', 1, CAST(N'2026-02-19T10:13:46.360' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (2, N'AFG', N'AF', N'93 ', N'Afghanistan', 1, CAST(N'2026-02-19T10:13:46.447' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (3, N'AGO', N'AO', N'244', N'Angola', 1, CAST(N'2026-02-19T10:13:46.497' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (5, N'ALB', N'AL', N'355', N'Albania', 1, CAST(N'2026-02-19T10:13:48.243' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (6, N'AND', N'AD', N'376', N'Andorra', 1, CAST(N'2026-02-19T10:13:48.300' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (7, N'ANT', N'AN', N'599', N'Netherlands Antilles', 1, CAST(N'2026-02-19T10:13:48.367' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (8, N'ARE', N'AE', N'971', N'United Arab Emirates', 1, CAST(N'2026-02-19T10:13:48.413' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (9, N'ARG', N'AR', N'54 ', N'Argentina', 1, CAST(N'2026-02-19T10:13:48.463' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (10, N'ARM', N'AM', N'374', N'Armenia', 1, CAST(N'2026-02-19T10:13:48.513' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (12, N'ATA', N'AQ', N'672', N'Antarctica', 1, CAST(N'2026-02-19T10:13:49.503' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (14, N'AUS', N'AU', N'61 ', N'Australia', 1, CAST(N'2026-02-19T10:13:50.620' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (15, N'AUT', N'AT', N'43 ', N'Austria', 1, CAST(N'2026-02-19T10:13:50.697' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (16, N'AZE', N'AZ', N'994', N'Azerbaijan', 1, CAST(N'2026-02-19T10:13:50.760' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (17, N'BDI', N'BI', N'257', N'Burundi', 1, CAST(N'2026-02-19T10:13:50.803' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (18, N'BEL', N'BE', N'32 ', N'Belgium', 1, CAST(N'2026-02-19T10:13:50.843' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (19, N'BEN', N'BJ', N'229', N'Benin', 1, CAST(N'2026-02-19T10:13:50.880' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (20, N'BFA', N'BF', N'226', N'Burkina Faso', 1, CAST(N'2026-02-19T10:13:50.917' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (21, N'BGD', N'BD', N'880', N'Bangladesh', 1, CAST(N'2026-02-19T10:13:50.953' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (22, N'BGR', N'BG', N'359', N'Bulgaria', 1, CAST(N'2026-02-19T10:13:50.990' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (23, N'BHR', N'BH', N'973', N'Bahrain', 1, CAST(N'2026-02-19T10:13:51.027' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (25, N'BIH', N'BA', N'387', N'Bosnia and Herzegovina', 1, CAST(N'2026-02-19T10:13:51.980' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (26, N'BLM', N'BL', N'590', N'Saint Barthelemy', 1, CAST(N'2026-02-19T10:13:52.047' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (27, N'BLR', N'BY', N'375', N'Belarus', 1, CAST(N'2026-02-19T10:13:52.103' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (28, N'BLZ', N'BZ', N'501', N'Belize', 1, CAST(N'2026-02-19T10:13:52.157' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (30, N'BOL', N'BO', N'591', N'Bolivia', 1, CAST(N'2026-02-19T10:13:52.820' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (31, N'BRA', N'BR', N'55 ', N'Brazil', 1, CAST(N'2026-02-19T10:13:52.890' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (33, N'BRN', N'BN', N'673', N'Brunei', 1, CAST(N'2026-02-19T10:13:53.533' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (34, N'BTN', N'BT', N'975', N'Bhutan', 1, CAST(N'2026-02-19T10:13:53.600' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (35, N'BWA', N'BW', N'267', N'Botswana', 1, CAST(N'2026-02-19T10:13:53.660' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (36, N'CAF', N'CF', N'236', N'Central African Republic', 1, CAST(N'2026-02-19T10:13:53.710' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (37, N'CAN', N'CA', N'1  ', N'Canada', 1, CAST(N'2026-02-19T10:13:53.757' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (39, N'CHE', N'CH', N'41 ', N'Switzerland', 1, CAST(N'2026-02-19T10:13:54.307' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (40, N'CHL', N'CL', N'56 ', N'Chile', 1, CAST(N'2026-02-19T10:13:54.373' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (41, N'CHN', N'CN', N'86 ', N'China', 1, CAST(N'2026-02-19T10:13:54.433' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (42, N'CIV', N'CI', N'225', N'Ivory Coast', 1, CAST(N'2026-02-19T10:13:54.487' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (43, N'CMR', N'CM', N'237', N'Cameroon', 1, CAST(N'2026-02-19T10:13:54.533' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (44, N'COD', N'CD', N'243', N'Democratic Republic of the Congo', 1, CAST(N'2026-02-19T10:13:54.577' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (45, N'COG', N'CG', N'242', N'Republic of the Congo', 1, CAST(N'2026-02-19T10:13:54.620' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (46, N'COK', N'CK', N'682', N'Cook Islands', 1, CAST(N'2026-02-19T10:13:54.663' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (47, N'COL', N'CO', N'57 ', N'Colombia', 1, CAST(N'2026-02-19T10:13:54.707' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (48, N'COM', N'KM', N'269', N'Comoros', 1, CAST(N'2026-02-19T10:13:54.773' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (49, N'CPV', N'CV', N'238', N'Cape Verde', 1, CAST(N'2026-02-19T10:13:54.813' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (50, N'CRC', N'CR', N'506', N'Costa Rica', 1, CAST(N'2026-02-19T10:13:54.857' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (51, N'CUB', N'CU', N'53 ', N'Cuba', 1, CAST(N'2026-02-19T10:13:54.900' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (54, N'CYP', N'CY', N'357', N'Cyprus', 1, CAST(N'2026-02-19T10:13:55.607' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (55, N'CZE', N'CZ', N'420', N'Czech Republic', 1, CAST(N'2026-02-19T10:13:55.667' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (56, N'DEU', N'DE', N'49 ', N'Germany', 1, CAST(N'2026-02-19T10:13:55.727' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (57, N'DJI', N'DJ', N'253', N'Djibouti', 1, CAST(N'2026-02-19T10:13:55.780' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (59, N'DNK', N'DK', N'45 ', N'Denmark', 1, CAST(N'2026-02-19T10:13:56.417' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (61, N'DZA', N'DZ', N'213', N'Algeria', 1, CAST(N'2026-02-19T10:13:57.130' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (62, N'ECU', N'EC', N'593', N'Ecuador', 1, CAST(N'2026-02-19T10:13:57.183' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (63, N'EGY', N'EG', N'20 ', N'Egypt', 1, CAST(N'2026-02-19T10:13:57.240' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (64, N'ERI', N'ER', N'291', N'Eritrea', 1, CAST(N'2026-02-19T10:13:57.293' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (65, N'ESH', N'EH', N'0  ', N'Western Sahara', 1, CAST(N'2026-02-19T10:13:57.337' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (66, N'ESP', N'ES', N'34 ', N'Spain', 1, CAST(N'2026-02-19T10:13:57.387' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (67, N'EST', N'EE', N'372', N'Estonia', 1, CAST(N'2026-02-19T10:13:57.433' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (68, N'ETH', N'ET', N'251', N'Ethiopia', 1, CAST(N'2026-02-19T10:13:57.480' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (69, N'FIN', N'FI', N'358', N'Finland', 1, CAST(N'2026-02-19T10:13:57.510' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (70, N'FJI', N'FJ', N'679', N'Fiji', 1, CAST(N'2026-02-19T10:13:57.547' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (71, N'FLK', N'FK', N'500', N'Falkland Islands', 1, CAST(N'2026-02-19T10:13:57.590' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (72, N'FRA', N'FR', N'33 ', N'France', 1, CAST(N'2026-02-19T10:13:57.633' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (73, N'FRO', N'FO', N'298', N'Faroe Islands', 1, CAST(N'2026-02-19T10:13:57.683' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (74, N'FSM', N'FM', N'691', N'Micronesia', 1, CAST(N'2026-02-19T10:13:57.727' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (75, N'GAB', N'GA', N'241', N'Gabon', 1, CAST(N'2026-02-19T10:13:57.773' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (76, N'GBR', N'GB', N'44 ', N'United Kingdom', 1, CAST(N'2026-02-19T10:13:57.817' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (77, N'GEO', N'GE', N'995', N'Georgia', 1, CAST(N'2026-02-19T10:13:57.853' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (78, N'GHA', N'GH', N'233', N'Ghana', 1, CAST(N'2026-02-19T10:13:57.890' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (79, N'GIB', N'GI', N'350', N'Gibraltar', 1, CAST(N'2026-02-19T10:13:57.930' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (80, N'GIN', N'GN', N'224', N'Guinea', 1, CAST(N'2026-02-19T10:13:57.980' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (81, N'GMB', N'GM', N'220', N'Gambia', 1, CAST(N'2026-02-19T10:13:58.020' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (82, N'GNB', N'GW', N'245', N'Guinea-Bissau', 1, CAST(N'2026-02-19T10:13:58.067' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (83, N'GNQ', N'GQ', N'240', N'Equatorial Guinea', 1, CAST(N'2026-02-19T10:13:58.117' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (84, N'GRC', N'GR', N'30 ', N'Greece', 1, CAST(N'2026-02-19T10:13:58.170' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (86, N'GRL', N'GL', N'299', N'Greenland', 1, CAST(N'2026-02-19T10:13:58.903' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (87, N'GST', N'GS', N'970', N'Gaza Strip', 1, CAST(N'2026-02-19T10:13:58.953' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (88, N'GTM', N'GT', N'502', N'Guatemala', 1, CAST(N'2026-02-19T10:13:59.010' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (90, N'GUY', N'GY', N'592', N'Guyana', 1, CAST(N'2026-02-19T10:13:59.720' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (91, N'HKG', N'HK', N'852', N'Hong Kong', 1, CAST(N'2026-02-19T10:13:59.783' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (92, N'HND', N'HN', N'504', N'Honduras', 1, CAST(N'2026-02-19T10:13:59.847' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (93, N'HRV', N'HR', N'385', N'Croatia', 1, CAST(N'2026-02-19T10:13:59.900' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (94, N'HTI', N'HT', N'509', N'Haiti', 1, CAST(N'2026-02-19T10:13:59.957' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (95, N'HUN', N'HU', N'36 ', N'Hungary', 1, CAST(N'2026-02-19T10:14:00.003' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (96, N'IDN', N'ID', N'62 ', N'Indonesia', 1, CAST(N'2026-02-19T10:14:00.050' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (98, N'IND', N'IN', N'91 ', N'India', 1, CAST(N'2026-02-19T10:14:02.053' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (100, N'IRL', N'IE', N'353', N'Ireland', 1, CAST(N'2026-02-19T10:14:02.873' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (101, N'IRN', N'IR', N'98 ', N'Iran', 1, CAST(N'2026-02-19T10:14:02.933' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (102, N'IRQ', N'IQ', N'964', N'Iraq', 1, CAST(N'2026-02-19T10:14:02.983' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (103, N'IS ', N'IS', N'354', N'Iceland', 1, CAST(N'2026-02-19T10:14:03.027' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (104, N'ISR', N'IL', N'972', N'Israel', 1, CAST(N'2026-02-19T10:14:03.070' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (105, N'ITA', N'IT', N'39 ', N'Italy', 1, CAST(N'2026-02-19T10:14:03.123' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (108, N'JOR', N'JO', N'962', N'Jordan', 1, CAST(N'2026-02-19T10:14:04.453' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (109, N'JPN', N'JP', N'81 ', N'Japan', 1, CAST(N'2026-02-19T10:14:04.517' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (110, N'KAZ', N'KZ', N'7  ', N'Kazakhstan', 1, CAST(N'2026-02-19T10:14:04.580' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (111, N'KEN', N'KE', N'254', N'Kenya', 1, CAST(N'2026-02-19T10:14:04.633' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (112, N'KGZ', N'KG', N'996', N'Kyrgyzstan', 1, CAST(N'2026-02-19T10:14:04.673' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (113, N'KHM', N'KH', N'855', N'Cambodia', 1, CAST(N'2026-02-19T10:14:04.717' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (114, N'KIR', N'KI', N'686', N'Kiribati', 1, CAST(N'2026-02-19T10:14:04.760' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (116, N'KOR', N'KR', N'82 ', N'South Korea', 1, CAST(N'2026-02-19T10:14:05.427' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (117, N'KSV', N'KS', N'381', N'Kosovo', 1, CAST(N'2026-02-19T10:14:05.480' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (118, N'KWT', N'KW', N'965', N'Kuwait', 1, CAST(N'2026-02-19T10:14:05.540' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (119, N'LAO', N'LA', N'856', N'Laos', 1, CAST(N'2026-02-19T10:14:05.593' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (120, N'LBN', N'LB', N'961', N'Lebanon', 1, CAST(N'2026-02-19T10:14:05.637' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (121, N'LBR', N'LR', N'231', N'Liberia', 1, CAST(N'2026-02-19T10:14:05.677' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (122, N'LBY', N'LY', N'218', N'Libya', 1, CAST(N'2026-02-19T10:14:05.720' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (124, N'LIE', N'LI', N'423', N'Liechtenstein', 1, CAST(N'2026-02-19T10:14:06.343' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (125, N'LKA', N'LK', N'94 ', N'Sri Lanka', 1, CAST(N'2026-02-19T10:14:06.423' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (126, N'LSO', N'LS', N'266', N'Lesotho', 1, CAST(N'2026-02-19T10:14:06.480' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (127, N'LTU', N'LT', N'370', N'Lithuania', 1, CAST(N'2026-02-19T10:14:06.533' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (128, N'LUX', N'LU', N'352', N'Luxembourg', 1, CAST(N'2026-02-19T10:14:06.587' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (129, N'LVA', N'LV', N'371', N'Latvia', 1, CAST(N'2026-02-19T10:14:06.623' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (130, N'MAC', N'MO', N'853', N'Macau', 1, CAST(N'2026-02-19T10:14:06.657' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (132, N'MAR', N'MA', N'212', N'Morocco', 1, CAST(N'2026-02-19T10:14:07.100' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (133, N'MCO', N'MC', N'377', N'Monaco', 1, CAST(N'2026-02-19T10:14:07.167' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (134, N'MDA', N'MD', N'373', N'Moldova', 1, CAST(N'2026-02-19T10:14:07.223' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (135, N'MDG', N'MG', N'261', N'Madagascar', 1, CAST(N'2026-02-19T10:14:07.267' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (136, N'MDV', N'MV', N'960', N'Maldives', 1, CAST(N'2026-02-19T10:14:07.313' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (137, N'MEX', N'MX', N'52 ', N'Mexico', 1, CAST(N'2026-02-19T10:14:07.360' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (138, N'MHL', N'MH', N'692', N'Marshall Islands', 1, CAST(N'2026-02-19T10:14:07.407' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (139, N'MKD', N'MK', N'389', N'Macedonia', 1, CAST(N'2026-02-19T10:14:07.443' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (140, N'MLI', N'ML', N'223', N'Mali', 1, CAST(N'2026-02-19T10:14:07.480' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (141, N'MLT', N'MT', N'356', N'Malta', 1, CAST(N'2026-02-19T10:14:07.513' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (142, N'MMR', N'MM', N'95 ', N'Burma (Myanmar)', 1, CAST(N'2026-02-19T10:14:07.553' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (143, N'MNE', N'ME', N'382', N'Montenegro', 1, CAST(N'2026-02-19T10:14:07.603' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (144, N'MNG', N'MN', N'976', N'Mongolia', 1, CAST(N'2026-02-19T10:14:07.650' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (146, N'MOZ', N'MZ', N'258', N'Mozambique', 1, CAST(N'2026-02-19T10:14:08.247' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (147, N'MRT', N'MR', N'222', N'Mauritania', 1, CAST(N'2026-02-19T10:14:08.310' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (149, N'MUS', N'MU', N'230', N'Mauritius', 1, CAST(N'2026-02-19T10:14:08.913' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (150, N'MWI', N'MW', N'265', N'Malawi', 1, CAST(N'2026-02-19T10:14:08.970' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (151, N'MYS', N'MY', N'60 ', N'Malaysia', 1, CAST(N'2026-02-19T10:14:09.023' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (152, N'MYT', N'YT', N'262', N'Mayotte', 1, CAST(N'2026-02-19T10:14:09.083' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (153, N'NAM', N'NA', N'264', N'Namibia', 1, CAST(N'2026-02-19T10:14:09.137' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (154, N'NCL', N'NC', N'687', N'New Caledonia', 1, CAST(N'2026-02-19T10:14:09.180' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (155, N'NER', N'NE', N'227', N'Niger', 1, CAST(N'2026-02-19T10:14:09.230' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (157, N'NGA', N'NG', N'234', N'Nigeria', 1, CAST(N'2026-02-19T10:14:09.707' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (158, N'NIC', N'NI', N'505', N'Nicaragua', 1, CAST(N'2026-02-19T10:14:09.770' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (159, N'NIU', N'NU', N'683', N'Niue', 1, CAST(N'2026-02-19T10:14:09.830' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (160, N'NLD', N'NL', N'31 ', N'Netherlands', 1, CAST(N'2026-02-19T10:14:09.883' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (161, N'NOR', N'NO', N'47 ', N'Norway', 1, CAST(N'2026-02-19T10:14:09.937' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (162, N'NPL', N'NP', N'977', N'Nepal', 1, CAST(N'2026-02-19T10:14:09.990' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (163, N'NRU', N'NR', N'674', N'Nauru', 1, CAST(N'2026-02-19T10:14:10.030' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (164, N'NZL', N'NZ', N'64 ', N'New Zealand', 1, CAST(N'2026-02-19T10:14:10.063' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (165, N'OMN', N'OM', N'968', N'Oman', 1, CAST(N'2026-02-19T10:14:10.100' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (166, N'PAK', N'PK', N'92 ', N'Pakistan', 1, CAST(N'2026-02-19T10:14:10.133' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (167, N'PAN', N'PA', N'507', N'Panama', 1, CAST(N'2026-02-19T10:14:10.167' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (168, N'PCN', N'PN', N'870', N'Pitcairn Islands', 1, CAST(N'2026-02-19T10:14:10.200' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (169, N'PER', N'PE', N'51 ', N'Peru', 1, CAST(N'2026-02-19T10:14:10.237' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (170, N'PHL', N'PH', N'63 ', N'Philippines', 1, CAST(N'2026-02-19T10:14:10.270' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (171, N'PLW', N'PW', N'680', N'Palau', 1, CAST(N'2026-02-19T10:14:10.303' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (172, N'PNG', N'PG', N'675', N'Papua New Guinea', 1, CAST(N'2026-02-19T10:14:10.340' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (173, N'POL', N'PL', N'48 ', N'Poland', 1, CAST(N'2026-02-19T10:14:10.387' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (175, N'PRK', N'KP', N'850', N'North Korea', 1, CAST(N'2026-02-19T10:14:10.573' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (176, N'PRT', N'PT', N'351', N'Portugal', 1, CAST(N'2026-02-19T10:14:10.620' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (177, N'PRY', N'PY', N'595', N'Paraguay', 1, CAST(N'2026-02-19T10:14:10.657' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (178, N'PYF', N'PF', N'689', N'French Polynesia', 1, CAST(N'2026-02-19T10:14:10.693' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (179, N'QAT', N'QA', N'974', N'Qatar', 1, CAST(N'2026-02-19T10:14:10.733' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (180, N'ROU', N'RO', N'40 ', N'Romania', 1, CAST(N'2026-02-19T10:14:10.767' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (182, N'RWA', N'RW', N'250', N'Rwanda', 1, CAST(N'2026-02-19T10:14:11.160' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (183, N'SAU', N'SA', N'966', N'Saudi Arabia', 1, CAST(N'2026-02-19T10:14:11.220' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (184, N'SDN', N'SD', N'249', N'Sudan', 1, CAST(N'2026-02-19T10:14:11.280' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (185, N'SEN', N'SN', N'221', N'Senegal', 1, CAST(N'2026-02-19T10:14:11.333' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (186, N'SGP', N'SG', N'65 ', N'Singapore', 1, CAST(N'2026-02-19T10:14:11.387' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (187, N'SHN', N'SH', N'290', N'Saint Helena', 1, CAST(N'2026-02-19T10:14:11.433' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (189, N'SLB', N'SB', N'677', N'Solomon Islands', 1, CAST(N'2026-02-19T10:14:11.630' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (190, N'SLE', N'SL', N'232', N'Sierra Leone', 1, CAST(N'2026-02-19T10:14:11.703' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (191, N'SLV', N'SV', N'503', N'El Salvador', 1, CAST(N'2026-02-19T10:14:11.763' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (192, N'SMR', N'SM', N'378', N'San Marino', 1, CAST(N'2026-02-19T10:14:11.817' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (193, N'SOM', N'SO', N'252', N'Somalia', 1, CAST(N'2026-02-19T10:14:11.870' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (194, N'SPM', N'PM', N'508', N'Saint Pierre and Miquelon', 1, CAST(N'2026-02-19T10:14:11.920' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (196, N'STP', N'ST', N'239', N'Sao Tome and Principe', 1, CAST(N'2026-02-19T10:14:12.080' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (197, N'SUR', N'SR', N'597', N'Suriname', 1, CAST(N'2026-02-19T10:14:12.127' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (198, N'SVK', N'SK', N'421', N'Slovakia', 1, CAST(N'2026-02-19T10:14:12.180' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (199, N'SVN', N'SI', N'386', N'Slovenia', 1, CAST(N'2026-02-19T10:14:12.230' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (200, N'SWE', N'SE', N'46 ', N'Sweden', 1, CAST(N'2026-02-19T10:14:12.283' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (201, N'SWZ', N'SZ', N'268', N'Swaziland', 1, CAST(N'2026-02-19T10:14:12.330' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (202, N'SYC', N'SC', N'248', N'Seychelles', 1, CAST(N'2026-02-19T10:14:12.377' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (203, N'SYR', N'SY', N'963', N'Syria', 1, CAST(N'2026-02-19T10:14:12.413' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (205, N'TCD', N'TD', N'235', N'Chad', 1, CAST(N'2026-02-19T10:14:12.577' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (206, N'TGO', N'TG', N'228', N'Togo', 1, CAST(N'2026-02-19T10:14:12.620' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (207, N'THA', N'TH', N'66 ', N'Thailand', 1, CAST(N'2026-02-19T10:14:12.677' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (208, N'TJK', N'TJ', N'992', N'Tajikistan', 1, CAST(N'2026-02-19T10:14:12.730' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (209, N'TKL', N'TK', N'690', N'Tokelau', 1, CAST(N'2026-02-19T10:14:12.783' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (210, N'TKM', N'TM', N'993', N'Turkmenistan', 1, CAST(N'2026-02-19T10:14:12.830' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (211, N'TLS', N'TL', N'670', N'Timor-Leste', 1, CAST(N'2026-02-19T10:14:12.877' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (212, N'TON', N'TO', N'676', N'Tonga', 1, CAST(N'2026-02-19T10:14:12.910' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (214, N'TUN', N'TN', N'216', N'Tunisia', 1, CAST(N'2026-02-19T10:14:13.053' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (215, N'TUR', N'TR', N'90 ', N'Turkey', 1, CAST(N'2026-02-19T10:14:13.100' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (216, N'TUV', N'TV', N'688', N'Tuvalu', 1, CAST(N'2026-02-19T10:14:13.143' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (217, N'TWN', N'TW', N'886', N'Taiwan', 1, CAST(N'2026-02-19T10:14:13.203' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (218, N'TZA', N'TZ', N'255', N'Tanzania', 1, CAST(N'2026-02-19T10:14:13.253' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (219, N'UGA', N'UG', N'256', N'Uganda', 1, CAST(N'2026-02-19T10:14:13.303' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (220, N'UKR', N'UA', N'380', N'Ukraine', 1, CAST(N'2026-02-19T10:14:13.343' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (221, N'URY', N'UY', N'598', N'Uruguay', 1, CAST(N'2026-02-19T10:14:13.383' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (223, N'UZB', N'UZ', N'998', N'Uzbekistan', 1, CAST(N'2026-02-19T10:14:13.557' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (226, N'VEN', N'VE', N'58 ', N'Venezuela', 1, CAST(N'2026-02-19T10:14:13.903' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (229, N'VNM', N'VN', N'84 ', N'Vietnam', 1, CAST(N'2026-02-19T10:14:14.333' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (230, N'VUT', N'VU', N'678', N'Vanuatu', 1, CAST(N'2026-02-19T10:14:14.583' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (232, N'WLF', N'WF', N'681', N'Wallis and Futuna', 1, CAST(N'2026-02-19T10:14:14.883' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (233, N'WSM', N'WS', N'685', N'Samoa', 1, CAST(N'2026-02-19T10:14:14.957' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (234, N'YEM', N'YE', N'967', N'Yemen', 1, CAST(N'2026-02-19T10:14:15.027' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (235, N'ZAF', N'ZA', N'27 ', N'South Africa', 1, CAST(N'2026-02-19T10:14:15.093' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (236, N'ZMB', N'ZM', N'260', N'Zambia', 1, CAST(N'2026-02-19T10:14:15.140' AS DateTime), NULL, NULL, NULL)
+GO
+INSERT [dbo].[master_negara] ([country_id], [kd_iso3], [kd_iso2], [kd_iso_num], [nama_negara], [is_active], [created_at], [created_by], [updated_at], [updated_by]) VALUES (237, N'ZWE', N'ZW', N'263', N'Zimbabwe', 1, CAST(N'2026-02-19T10:14:15.183' AS DateTime), NULL, NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[master_negara] OFF
+GO
+INSERT [dbo].[master_produk] ([kode_produk], [nama_produk], [kode_mata_uang], [no_rekening_penerima], [premi_min], [premi_max], [keterangan], [status], [created_by], [created_at], [updated_by], [updated_at]) VALUES (N'CPPID01', N'CAPITAL PROTEKSI PLUS (IDR)', N'IDR', N'123', CAST(100000000.00 AS Decimal(18, 2)), NULL, NULL, N'AKTIF', NULL, CAST(N'2026-02-14T22:24:27.800' AS DateTime), NULL, NULL)
+GO
+INSERT [dbo].[master_produk] ([kode_produk], [nama_produk], [kode_mata_uang], [no_rekening_penerima], [premi_min], [premi_max], [keterangan], [status], [created_by], [created_at], [updated_by], [updated_at]) VALUES (N'CPPID02', N'CAPITAL PROTEKSI PLUS (USD)', N'USD', N'321', NULL, NULL, NULL, N'AKTIF', NULL, CAST(N'2026-02-14T22:25:27.140' AS DateTime), NULL, NULL)
+GO
+INSERT [dbo].[master_produk_plan] ([kode_produk], [kode_plan], [nama_plan], [frekuensi_pembayaran_bulan], [tenor_bulan], [butuh_konfirmasi_cair], [batas_konfirmasi_hari], [keterangan], [status], [created_by], [created_at], [updated_by], [updated_at]) VALUES (N'CPPID01', N'CPPID01_01', N'1/12', 1, 12, N'Y', 7, NULL, N'AKTIF', NULL, CAST(N'2026-02-19T10:44:18.553' AS DateTime), NULL, NULL)
+GO
+INSERT [dbo].[master_produk_plan] ([kode_produk], [kode_plan], [nama_plan], [frekuensi_pembayaran_bulan], [tenor_bulan], [butuh_konfirmasi_cair], [batas_konfirmasi_hari], [keterangan], [status], [created_by], [created_at], [updated_by], [updated_at]) VALUES (N'CPPID01', N'CPPID01_02', N'3/12', 3, 12, N'Y', 7, NULL, N'AKTIF', NULL, CAST(N'2026-02-19T10:44:36.727' AS DateTime), NULL, NULL)
+GO
+INSERT [dbo].[master_produk_plan] ([kode_produk], [kode_plan], [nama_plan], [frekuensi_pembayaran_bulan], [tenor_bulan], [butuh_konfirmasi_cair], [batas_konfirmasi_hari], [keterangan], [status], [created_by], [created_at], [updated_by], [updated_at]) VALUES (N'CPPID01', N'CPPID01_03', N'6/12', 6, 12, N'Y', 7, NULL, N'AKTIF', NULL, CAST(N'2026-02-19T10:45:01.647' AS DateTime), NULL, NULL)
+GO
+INSERT [dbo].[master_produk_plan] ([kode_produk], [kode_plan], [nama_plan], [frekuensi_pembayaran_bulan], [tenor_bulan], [butuh_konfirmasi_cair], [batas_konfirmasi_hari], [keterangan], [status], [created_by], [created_at], [updated_by], [updated_at]) VALUES (N'CPPID01', N'CPPID01_04', N'6/6', 6, 6, N'N', 7, NULL, N'AKTIF', NULL, CAST(N'2026-02-19T10:45:25.220' AS DateTime), NULL, NULL)
+GO
+INSERT [dbo].[master_produk_plan] ([kode_produk], [kode_plan], [nama_plan], [frekuensi_pembayaran_bulan], [tenor_bulan], [butuh_konfirmasi_cair], [batas_konfirmasi_hari], [keterangan], [status], [created_by], [created_at], [updated_by], [updated_at]) VALUES (N'CPPID01', N'CPPID01_05', N'12/12', 12, 12, N'N', 7, NULL, N'AKTIF', NULL, CAST(N'2026-02-19T10:45:55.440' AS DateTime), NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[menus] ON 
+GO
+INSERT [dbo].[menus] ([id], [parent_id], [name], [code], [url], [controller], [action], [param], [icon], [sort_order], [is_active], [menu_type], [stored_procedure], [params_json]) VALUES (1, NULL, N'Dashboard', N'dashboard', N'/Dashboard/Index', N'Dashboard', N'Index', NULL, N'solar:home-2-line-duotone', 1, 1, N'folder', NULL, NULL)
+GO
+INSERT [dbo].[menus] ([id], [parent_id], [name], [code], [url], [controller], [action], [param], [icon], [sort_order], [is_active], [menu_type], [stored_procedure], [params_json]) VALUES (2, NULL, N'Settings', N'settings', NULL, NULL, NULL, NULL, N'solar:settings-outline', 2, 1, N'folder', NULL, NULL)
+GO
+INSERT [dbo].[menus] ([id], [parent_id], [name], [code], [url], [controller], [action], [param], [icon], [sort_order], [is_active], [menu_type], [stored_procedure], [params_json]) VALUES (3, NULL, N'Reports', N'reports', NULL, NULL, NULL, NULL, N'fa fa-chart-bar', 4, 1, N'folder', NULL, NULL)
+GO
+INSERT [dbo].[menus] ([id], [parent_id], [name], [code], [url], [controller], [action], [param], [icon], [sort_order], [is_active], [menu_type], [stored_procedure], [params_json]) VALUES (4, 2, N'User Management', N'user_mgmt', N'/User/Index/5', N'User', N'Index', NULL, N'fa-regular fa-circle', 1, 1, N'folder', NULL, NULL)
+GO
+INSERT [dbo].[menus] ([id], [parent_id], [name], [code], [url], [controller], [action], [param], [icon], [sort_order], [is_active], [menu_type], [stored_procedure], [params_json]) VALUES (5, 2, N'Role Access', N'role_access', N'/RoleDepartmentMenu/Index/6', N'RoleDepartment', N'Index', NULL, N'fa-regular fa-circle', 2, 1, N'folder', NULL, NULL)
+GO
+INSERT [dbo].[menus] ([id], [parent_id], [name], [code], [url], [controller], [action], [param], [icon], [sort_order], [is_active], [menu_type], [stored_procedure], [params_json]) VALUES (6, 4, N'Sales Summary', N'sales_summary', N'/Reports/View/11', N'Reports', N'View', 11, N'fa-regular fa-circle', 1, 1, N'report', N'sp_SalesSummary', N'{')
+GO
+INSERT [dbo].[menus] ([id], [parent_id], [name], [code], [url], [controller], [action], [param], [icon], [sort_order], [is_active], [menu_type], [stored_procedure], [params_json]) VALUES (8, NULL, N'Submission', N'Submission', NULL, NULL, NULL, NULL, N'fa fa-paper-plane', 3, 1, N'folder', NULL, NULL)
+GO
+INSERT [dbo].[menus] ([id], [parent_id], [name], [code], [url], [controller], [action], [param], [icon], [sort_order], [is_active], [menu_type], [stored_procedure], [params_json]) VALUES (10, NULL, N'Approval', N'approval', NULL, NULL, NULL, NULL, N'fa fa-clipboard-check', 3, 1, N'folder', NULL, NULL)
+GO
+INSERT [dbo].[menus] ([id], [parent_id], [name], [code], [url], [controller], [action], [param], [icon], [sort_order], [is_active], [menu_type], [stored_procedure], [params_json]) VALUES (12, 4, N'Hold Premi', N'hold_premi_report', NULL, N'Reports', N'View', 26, N'fa-regular fa-circle', 1, 1, N'report', N'usp_rptPremiHold', N'{"DateFrom": {"ParamName": "DateFrom","Label": "Start Date","ParamType": "date","Required": true},"DateTo": {"ParamName": "DateTo","Label": "End Date","ParamType": "date","Required": true},"PolisNo": {"ParamName": "PolisNo","Label": "Search PolisNo","ParamType": "text"} }')
+GO
+INSERT [dbo].[menus] ([id], [parent_id], [name], [code], [url], [controller], [action], [param], [icon], [sort_order], [is_active], [menu_type], [stored_procedure], [params_json]) VALUES (13, NULL, N'Cashback', N'cashback', NULL, NULL, NULL, NULL, N'fa fa-cog', 5, 1, N'folder', NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[menus] OFF
+GO
+SET IDENTITY_INSERT [dbo].[role_department_menu] ON 
+GO
+INSERT [dbo].[role_department_menu] ([id], [role_id], [department_id], [menu_id], [is_access]) VALUES (1, 1, 1, 1, 1)
+GO
+INSERT [dbo].[role_department_menu] ([id], [role_id], [department_id], [menu_id], [is_access]) VALUES (2, 1, 1, 2, 1)
+GO
+INSERT [dbo].[role_department_menu] ([id], [role_id], [department_id], [menu_id], [is_access]) VALUES (3, 1, 1, 5, 1)
+GO
+INSERT [dbo].[role_department_menu] ([id], [role_id], [department_id], [menu_id], [is_access]) VALUES (4, 1, 1, 6, 1)
+GO
+INSERT [dbo].[role_department_menu] ([id], [role_id], [department_id], [menu_id], [is_access]) VALUES (13, 1, 1, 4, 1)
+GO
+INSERT [dbo].[role_department_menu] ([id], [role_id], [department_id], [menu_id], [is_access]) VALUES (14, 6, 4, 1, 1)
+GO
+INSERT [dbo].[role_department_menu] ([id], [role_id], [department_id], [menu_id], [is_access]) VALUES (15, 6, 4, 3, 1)
+GO
+SET IDENTITY_INSERT [dbo].[role_department_menu] OFF
+GO
+SET IDENTITY_INSERT [dbo].[roles] ON 
+GO
+INSERT [dbo].[roles] ([id], [name], [level_role], [description], [created_at]) VALUES (1, N'Administrator', NULL, N'Administrator', CAST(N'2025-11-14T14:00:11.967' AS DateTime))
+GO
+INSERT [dbo].[roles] ([id], [name], [level_role], [description], [created_at]) VALUES (2, N'Division Head', 4, N'', CAST(N'2025-11-14T14:00:11.967' AS DateTime))
+GO
+INSERT [dbo].[roles] ([id], [name], [level_role], [description], [created_at]) VALUES (3, N'Department Head', 3, N'', CAST(N'2025-12-05T14:30:12.033' AS DateTime))
+GO
+INSERT [dbo].[roles] ([id], [name], [level_role], [description], [created_at]) VALUES (4, N'Section Head', 2, N'', CAST(N'2025-12-05T14:30:12.033' AS DateTime))
+GO
+INSERT [dbo].[roles] ([id], [name], [level_role], [description], [created_at]) VALUES (5, N'Officer', 1, N'', CAST(N'2025-12-05T14:30:12.037' AS DateTime))
+GO
+INSERT [dbo].[roles] ([id], [name], [level_role], [description], [created_at]) VALUES (6, N'Direktur', 5, N'', CAST(N'2026-02-15T00:15:07.323' AS DateTime))
+GO
+SET IDENTITY_INSERT [dbo].[roles] OFF
+GO
+INSERT [dbo].[users] ([user_id], [department_id], [role_id], [password_hash], [full_name], [email], [is_active], [created_at], [updated_at], [password_expiry_date]) VALUES (N'000001', 1, 1, N'$2a$12$Tvfzo8gIUuPQV2uyFns0wOsRfT991I1qZj4hMBmOE6dHVHO4wU8fO', N'Administrator', N'admin@capital.com', 1, CAST(N'2026-03-01T19:23:47.800' AS DateTime), CAST(N'2026-03-01T19:23:47.800' AS DateTime), CAST(N'2028-11-25T19:23:47.800' AS DateTime))
+GO
+INSERT [dbo].[users] ([user_id], [department_id], [role_id], [password_hash], [full_name], [email], [is_active], [created_at], [updated_at], [password_expiry_date]) VALUES (N'000002', 4, 6, N'000002', N'Dummy', N'dummy@gmail.com', 1, CAST(N'2026-03-13T01:52:54.580' AS DateTime), NULL, CAST(N'2029-03-13T01:52:54.610' AS DateTime))
+GO
+INSERT [dbo].[users] ([user_id], [department_id], [role_id], [password_hash], [full_name], [email], [is_active], [created_at], [updated_at], [password_expiry_date]) VALUES (N'000003', 3, 3, N'$2a$11$Irr1h5B9lLwB/JPCUGHMK.DpBFkXZT.G/FewQuEhw7PY5S2C1mK4O', N'Lorem Ipsum', N'loremipsum@gmail.com', 1, CAST(N'2026-03-13T21:35:56.947' AS DateTime), NULL, CAST(N'2029-03-13T21:35:56.950' AS DateTime))
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [idx_cif_address_cif]    Script Date: 6/2/2026 11:18:33 PM ******/
+CREATE NONCLUSTERED INDEX [idx_cif_address_cif] ON [dbo].[cif_address]
+(
+	[cif_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [ux_cif_address_primary]    Script Date: 6/2/2026 11:18:33 PM ******/
+CREATE UNIQUE NONCLUSTERED INDEX [ux_cif_address_primary] ON [dbo].[cif_address]
+(
+	[cif_id] ASC,
+	[address_type] ASC
+)
+WHERE ([is_primary]=(1))
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [uq_family]    Script Date: 6/2/2026 11:18:33 PM ******/
+ALTER TABLE [dbo].[cif_family] ADD  CONSTRAINT [uq_family] UNIQUE NONCLUSTERED 
+(
+	[cif_id_utama] ASC,
+	[cif_id_keluarga] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [UQ__departme__357D4CF9CDD15C15]    Script Date: 6/2/2026 11:18:33 PM ******/
+ALTER TABLE [dbo].[departments] ADD UNIQUE NONCLUSTERED 
+(
+	[code] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [UQ_kurs_harian_date_currency]    Script Date: 6/2/2026 11:18:33 PM ******/
+ALTER TABLE [dbo].[kurs_harian] ADD  CONSTRAINT [UQ_kurs_harian_date_currency] UNIQUE NONCLUSTERED 
+(
+	[kurs_date] ASC,
+	[currency_code] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [ux_master_lookup]    Script Date: 6/2/2026 11:18:33 PM ******/
+CREATE UNIQUE NONCLUSTERED INDEX [ux_master_lookup] ON [dbo].[master_lookup]
+(
+	[group_code] ASC,
+	[code] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [ux_country_iso2]    Script Date: 6/2/2026 11:18:33 PM ******/
+CREATE UNIQUE NONCLUSTERED INDEX [ux_country_iso2] ON [dbo].[master_negara]
+(
+	[kd_iso2] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [ux_country_iso3]    Script Date: 6/2/2026 11:18:33 PM ******/
+CREATE UNIQUE NONCLUSTERED INDEX [ux_country_iso3] ON [dbo].[master_negara]
+(
+	[kd_iso3] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [ux_country_isonum]    Script Date: 6/2/2026 11:18:33 PM ******/
+CREATE UNIQUE NONCLUSTERED INDEX [ux_country_isonum] ON [dbo].[master_negara]
+(
+	[kd_iso_num] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [UQ__master_p__C637CE6F353874C9]    Script Date: 6/2/2026 11:18:33 PM ******/
+ALTER TABLE [dbo].[master_produk] ADD  CONSTRAINT [UQ__master_p__C637CE6F353874C9] UNIQUE NONCLUSTERED 
+(
+	[kode_produk] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [UQ__menus__357D4CF9971E9AB5]    Script Date: 6/2/2026 11:18:33 PM ******/
+ALTER TABLE [dbo].[menus] ADD  CONSTRAINT [UQ__menus__357D4CF9971E9AB5] UNIQUE NONCLUSTERED 
+(
+	[code] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [idx_polis_aplikasi]    Script Date: 6/2/2026 11:18:33 PM ******/
+CREATE NONCLUSTERED INDEX [idx_polis_aplikasi] ON [dbo].[polis]
+(
+	[aplikasi_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [idx_polis_status]    Script Date: 6/2/2026 11:18:33 PM ******/
+CREATE NONCLUSTERED INDEX [idx_polis_status] ON [dbo].[polis]
+(
+	[status_polis] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [uq_role_dept_menu]    Script Date: 6/2/2026 11:18:33 PM ******/
+ALTER TABLE [dbo].[role_department_menu] ADD  CONSTRAINT [uq_role_dept_menu] UNIQUE NONCLUSTERED 
+(
+	[role_id] ASC,
+	[department_id] ASC,
+	[menu_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[aplikasi_ahli_waris] ADD  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[aplikasi_cif] ADD  DEFAULT (sysdatetime()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[aplikasi_cif_address] ADD  DEFAULT (sysdatetime()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[aplikasi_document] ADD  DEFAULT (getdate()) FOR [uploaded_at]
+GO
+ALTER TABLE [dbo].[aplikasi_document] ADD  DEFAULT ((1)) FOR [is_active]
+GO
+ALTER TABLE [dbo].[cif] ADD  CONSTRAINT [DF__cif__created_at__4AB81AF0]  DEFAULT (sysdatetime()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[cif_address] ADD  CONSTRAINT [DF__cif_addre__is_pr__3E1D39E1]  DEFAULT ((0)) FOR [is_primary]
+GO
+ALTER TABLE [dbo].[cif_address] ADD  CONSTRAINT [DF__cif_addre__negar__3F115E1A]  DEFAULT ('indonesia') FOR [negara]
+GO
+ALTER TABLE [dbo].[cif_address] ADD  CONSTRAINT [DF_cif_address_created_at]  DEFAULT (sysdatetime()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[cif_family] ADD  CONSTRAINT [DF_cif_family_created_at]  DEFAULT (sysdatetime()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[cif_pajak_wna] ADD  CONSTRAINT [DF_cif_pajak_created_at]  DEFAULT (sysdatetime()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[departments] ADD  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[kurs_harian] ADD  DEFAULT ((1)) FOR [is_active]
+GO
+ALTER TABLE [dbo].[kurs_harian] ADD  DEFAULT (sysdatetime()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[master_lookup] ADD  DEFAULT ((0)) FOR [sequence]
+GO
+ALTER TABLE [dbo].[master_lookup] ADD  DEFAULT ((1)) FOR [is_active]
+GO
+ALTER TABLE [dbo].[master_lookup] ADD  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[master_negara] ADD  DEFAULT ((1)) FOR [is_active]
+GO
+ALTER TABLE [dbo].[master_negara] ADD  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[master_produk] ADD  CONSTRAINT [DF__master_pr__statu__531856C7]  DEFAULT ('AKTIF') FOR [status]
+GO
+ALTER TABLE [dbo].[master_produk] ADD  CONSTRAINT [DF__master_pr__creat__540C7B00]  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[master_produk_plan] ADD  CONSTRAINT [DF__master_pr__butuh__56E8E7AB]  DEFAULT ('Y') FOR [butuh_konfirmasi_cair]
+GO
+ALTER TABLE [dbo].[master_produk_plan] ADD  CONSTRAINT [DF__master_pr__batas__57DD0BE4]  DEFAULT ((7)) FOR [batas_konfirmasi_hari]
+GO
+ALTER TABLE [dbo].[master_produk_plan] ADD  CONSTRAINT [DF__master_pr__statu__58D1301D]  DEFAULT ('AKTIF') FOR [status]
+GO
+ALTER TABLE [dbo].[master_produk_plan] ADD  CONSTRAINT [DF__master_pr__creat__59C55456]  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[menus] ADD  CONSTRAINT [DF__menus__sort_orde__403A8C7D]  DEFAULT ((0)) FOR [sort_order]
+GO
+ALTER TABLE [dbo].[menus] ADD  CONSTRAINT [DF__menus__is_active__412EB0B6]  DEFAULT ((1)) FOR [is_active]
+GO
+ALTER TABLE [dbo].[role_department_menu] ADD  CONSTRAINT [DF__role_depa__can_v__797309D9]  DEFAULT ((1)) FOR [is_access]
+GO
+ALTER TABLE [dbo].[roles] ADD  CONSTRAINT [DF__roles__created_a__3C69FB99]  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[users] ADD  CONSTRAINT [DF__users__status__5CD6CB2B]  DEFAULT ('active') FOR [is_active]
+GO
+ALTER TABLE [dbo].[users] ADD  CONSTRAINT [DF__users__created_a__5DCAEF64]  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[users] ADD  CONSTRAINT [DF__users__updated_a__5EBF139D]  DEFAULT (getdate()) FOR [updated_at]
+GO
+ALTER TABLE [dbo].[aplikasi]  WITH CHECK ADD  CONSTRAINT [FK_aplikasi_pemegang_polis] FOREIGN KEY([no_pemegang_polis])
+REFERENCES [dbo].[cif] ([cif_id])
+GO
+ALTER TABLE [dbo].[aplikasi] CHECK CONSTRAINT [FK_aplikasi_pemegang_polis]
+GO
+ALTER TABLE [dbo].[aplikasi]  WITH CHECK ADD  CONSTRAINT [FK_aplikasi_tertanggung] FOREIGN KEY([no_tertanggung])
+REFERENCES [dbo].[cif] ([cif_id])
+GO
+ALTER TABLE [dbo].[aplikasi] CHECK CONSTRAINT [FK_aplikasi_tertanggung]
+GO
+ALTER TABLE [dbo].[aplikasi_ahli_waris]  WITH CHECK ADD  CONSTRAINT [FK_aplikasi_ahli_waris_aplikasi] FOREIGN KEY([aplikasi_id])
+REFERENCES [dbo].[aplikasi] ([aplikasi_id])
+GO
+ALTER TABLE [dbo].[aplikasi_ahli_waris] CHECK CONSTRAINT [FK_aplikasi_ahli_waris_aplikasi]
+GO
+ALTER TABLE [dbo].[aplikasi_ahli_waris]  WITH CHECK ADD  CONSTRAINT [FK_aplikasi_ahli_waris_cif] FOREIGN KEY([cif_id])
+REFERENCES [dbo].[cif] ([cif_id])
+GO
+ALTER TABLE [dbo].[aplikasi_ahli_waris] CHECK CONSTRAINT [FK_aplikasi_ahli_waris_cif]
+GO
+ALTER TABLE [dbo].[aplikasi_cif]  WITH CHECK ADD  CONSTRAINT [FK_aplikasi_cif_aplikasi] FOREIGN KEY([aplikasi_id])
+REFERENCES [dbo].[aplikasi] ([aplikasi_id])
+GO
+ALTER TABLE [dbo].[aplikasi_cif] CHECK CONSTRAINT [FK_aplikasi_cif_aplikasi]
+GO
+ALTER TABLE [dbo].[aplikasi_cif]  WITH CHECK ADD  CONSTRAINT [FK_aplikasi_cif_cif] FOREIGN KEY([cif_id])
+REFERENCES [dbo].[cif] ([cif_id])
+GO
+ALTER TABLE [dbo].[aplikasi_cif] CHECK CONSTRAINT [FK_aplikasi_cif_cif]
+GO
+ALTER TABLE [dbo].[aplikasi_cif_address]  WITH CHECK ADD  CONSTRAINT [FK_aplikasi_cif_address_aplikasi] FOREIGN KEY([aplikasi_id])
+REFERENCES [dbo].[aplikasi] ([aplikasi_id])
+GO
+ALTER TABLE [dbo].[aplikasi_cif_address] CHECK CONSTRAINT [FK_aplikasi_cif_address_aplikasi]
+GO
+ALTER TABLE [dbo].[aplikasi_cif_address]  WITH CHECK ADD  CONSTRAINT [FK_aplikasi_cif_address_cif] FOREIGN KEY([cif_id])
+REFERENCES [dbo].[cif] ([cif_id])
+GO
+ALTER TABLE [dbo].[aplikasi_cif_address] CHECK CONSTRAINT [FK_aplikasi_cif_address_cif]
+GO
+ALTER TABLE [dbo].[aplikasi_document]  WITH CHECK ADD  CONSTRAINT [FK_document_aplikasi_aplikasi] FOREIGN KEY([aplikasi_id])
+REFERENCES [dbo].[aplikasi] ([aplikasi_id])
+GO
+ALTER TABLE [dbo].[aplikasi_document] CHECK CONSTRAINT [FK_document_aplikasi_aplikasi]
+GO
+ALTER TABLE [dbo].[cif_address]  WITH CHECK ADD  CONSTRAINT [fk_cif_address_cif] FOREIGN KEY([cif_id])
+REFERENCES [dbo].[cif] ([cif_id])
+GO
+ALTER TABLE [dbo].[cif_address] CHECK CONSTRAINT [fk_cif_address_cif]
+GO
+ALTER TABLE [dbo].[cif_family]  WITH CHECK ADD  CONSTRAINT [fk_family_keluarga] FOREIGN KEY([cif_id_keluarga])
+REFERENCES [dbo].[cif] ([cif_id])
+GO
+ALTER TABLE [dbo].[cif_family] CHECK CONSTRAINT [fk_family_keluarga]
+GO
+ALTER TABLE [dbo].[cif_family]  WITH CHECK ADD  CONSTRAINT [fk_family_utama] FOREIGN KEY([cif_id_utama])
+REFERENCES [dbo].[cif] ([cif_id])
+GO
+ALTER TABLE [dbo].[cif_family] CHECK CONSTRAINT [fk_family_utama]
+GO
+ALTER TABLE [dbo].[cif_pajak_wna]  WITH CHECK ADD  CONSTRAINT [fk_cif_pajak] FOREIGN KEY([cif_id])
+REFERENCES [dbo].[cif] ([cif_id])
+GO
+ALTER TABLE [dbo].[cif_pajak_wna] CHECK CONSTRAINT [fk_cif_pajak]
+GO
+ALTER TABLE [dbo].[master_produk_plan]  WITH CHECK ADD  CONSTRAINT [FK_master_produk_plan_produk] FOREIGN KEY([kode_produk])
+REFERENCES [dbo].[master_produk] ([kode_produk])
+GO
+ALTER TABLE [dbo].[master_produk_plan] CHECK CONSTRAINT [FK_master_produk_plan_produk]
+GO
+ALTER TABLE [dbo].[menus]  WITH CHECK ADD  CONSTRAINT [FK__menus__parent_id__4222D4EF] FOREIGN KEY([parent_id])
+REFERENCES [dbo].[menus] ([id])
+GO
+ALTER TABLE [dbo].[menus] CHECK CONSTRAINT [FK__menus__parent_id__4222D4EF]
+GO
+ALTER TABLE [dbo].[menus]  WITH CHECK ADD  CONSTRAINT [FK__menus__parent_id__5812160E] FOREIGN KEY([parent_id])
+REFERENCES [dbo].[menus] ([id])
+GO
+ALTER TABLE [dbo].[menus] CHECK CONSTRAINT [FK__menus__parent_id__5812160E]
+GO
+ALTER TABLE [dbo].[role_department_menu]  WITH CHECK ADD  CONSTRAINT [FK__role_depa__depar__7D439ABD] FOREIGN KEY([department_id])
+REFERENCES [dbo].[departments] ([id])
+GO
+ALTER TABLE [dbo].[role_department_menu] CHECK CONSTRAINT [FK__role_depa__depar__7D439ABD]
+GO
+ALTER TABLE [dbo].[role_department_menu]  WITH CHECK ADD  CONSTRAINT [FK__role_depa__depar__7E37BEF6] FOREIGN KEY([department_id])
+REFERENCES [dbo].[departments] ([id])
+GO
+ALTER TABLE [dbo].[role_department_menu] CHECK CONSTRAINT [FK__role_depa__depar__7E37BEF6]
+GO
+ALTER TABLE [dbo].[role_department_menu]  WITH CHECK ADD  CONSTRAINT [FK__role_depa__menu___4AB81AF0] FOREIGN KEY([menu_id])
+REFERENCES [dbo].[menus] ([id])
+GO
+ALTER TABLE [dbo].[role_department_menu] CHECK CONSTRAINT [FK__role_depa__menu___4AB81AF0]
+GO
+ALTER TABLE [dbo].[role_department_menu]  WITH CHECK ADD  CONSTRAINT [FK__role_depa__menu___534D60F1] FOREIGN KEY([menu_id])
+REFERENCES [dbo].[menus] ([id])
+GO
+ALTER TABLE [dbo].[role_department_menu] CHECK CONSTRAINT [FK__role_depa__menu___534D60F1]
+GO
+ALTER TABLE [dbo].[role_department_menu]  WITH CHECK ADD  CONSTRAINT [FK__role_depa__menu___5BE2A6F2] FOREIGN KEY([menu_id])
+REFERENCES [dbo].[menus] ([id])
+GO
+ALTER TABLE [dbo].[role_department_menu] CHECK CONSTRAINT [FK__role_depa__menu___5BE2A6F2]
+GO
+ALTER TABLE [dbo].[role_department_menu]  WITH CHECK ADD  CONSTRAINT [FK__role_depa__role___02084FDA] FOREIGN KEY([role_id])
+REFERENCES [dbo].[roles] ([id])
+GO
+ALTER TABLE [dbo].[role_department_menu] CHECK CONSTRAINT [FK__role_depa__role___02084FDA]
+GO
+ALTER TABLE [dbo].[role_department_menu]  WITH CHECK ADD  CONSTRAINT [FK__role_depa__role___02FC7413] FOREIGN KEY([role_id])
+REFERENCES [dbo].[roles] ([id])
+GO
+ALTER TABLE [dbo].[role_department_menu] CHECK CONSTRAINT [FK__role_depa__role___02FC7413]
+GO
+ALTER TABLE [dbo].[role_department_menu]  WITH CHECK ADD  CONSTRAINT [FK__role_depa__role___03F0984C] FOREIGN KEY([role_id])
+REFERENCES [dbo].[roles] ([id])
+GO
+ALTER TABLE [dbo].[role_department_menu] CHECK CONSTRAINT [FK__role_depa__role___03F0984C]
+GO
+ALTER TABLE [dbo].[aplikasi_ahli_waris]  WITH CHECK ADD  CONSTRAINT [CK_aplikasi_ahli_waris_persentase] CHECK  (([persentase]>(0) AND [persentase]<=(100)))
+GO
+ALTER TABLE [dbo].[aplikasi_ahli_waris] CHECK CONSTRAINT [CK_aplikasi_ahli_waris_persentase]
+GO
+ALTER TABLE [dbo].[aplikasi_cif]  WITH CHECK ADD  CONSTRAINT [CK_aplikasi_cif_jenis_kelamin] CHECK  (([jenis_kelamin] IS NULL OR ([jenis_kelamin]='W' OR [jenis_kelamin]='P')))
+GO
+ALTER TABLE [dbo].[aplikasi_cif] CHECK CONSTRAINT [CK_aplikasi_cif_jenis_kelamin]
+GO
+ALTER TABLE [dbo].[cif]  WITH CHECK ADD  CONSTRAINT [CK__cif__jenis_kelam__49C3F6B7] CHECK  (([jenis_kelamin]='W' OR [jenis_kelamin]='P'))
+GO
+ALTER TABLE [dbo].[cif] CHECK CONSTRAINT [CK__cif__jenis_kelam__49C3F6B7]
+GO
+USE [master]
+GO
+ALTER DATABASE [CLI_INDIVIDU] SET  READ_WRITE 
+GO
