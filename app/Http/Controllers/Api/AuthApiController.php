@@ -10,6 +10,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\JWTGuard;
 
@@ -17,6 +19,7 @@ use Tymon\JWTAuth\JWTGuard;
  * API Authentication Controller
  *
  * Authenticate users with user_id OR email and password to receive a JWT bearer token.
+ * Rate limited to 5 attempts per minute per identifier+IP.
  */
 #[Group('Authentication')]
 class AuthApiController extends Controller
@@ -49,8 +52,20 @@ class AuthApiController extends Controller
             ]);
         }
 
-        // Single query: find by email OR user_id (same as web LoginRequest)
         $identifier = $validated['user_id'] ?? $validated['email'];
+
+        // Rate limiting: 5 attempts per minute per identifier+IP
+        $throttleKey = Str::transliterate(Str::lower($identifier) . '|' . $request->ip());
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+
+            throw ValidationException::withMessages([
+                'user_id' => [__('Too many login attempts. Please try again in :seconds seconds.', ['seconds' => $seconds])],
+            ]);
+        }
+
+        // Single query: find by email OR user_id (same as web LoginRequest)
         $user = User::query()
             ->where('email', $identifier)
             ->orWhere('user_id', $identifier)
@@ -58,12 +73,16 @@ class AuthApiController extends Controller
 
         // Validate: user exists, active, password matches
         if (! $user || ! $user->is_active || ! Hash::check($validated['password'], $user->getAuthPassword())) {
+            RateLimiter::hit($throttleKey, 60);
+
             throw ValidationException::withMessages([
                 'user_id' => ['The provided credentials are incorrect or the account is inactive.'],
             ]);
         }
 
-        // Generate token directly (1 query via attempt, no double lookup)
+        // Success: clear rate limit + generate token
+        RateLimiter::clear($throttleKey);
+
         $token = $this->apiGuard()->login($user);
 
         return $this->respondWithToken($token);
