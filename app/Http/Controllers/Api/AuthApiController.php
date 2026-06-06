@@ -15,7 +15,7 @@ use Tymon\JWTAuth\JWTGuard;
 /**
  * API Authentication Controller
  *
- * Authenticate users with user_id and password and manage JWT access tokens.
+ * Authenticate users with user_id OR email and password to receive a JWT bearer token.
  */
 #[Group('Authentication')]
 class AuthApiController extends Controller
@@ -24,9 +24,11 @@ class AuthApiController extends Controller
      * Login
      *
      * Authenticate a user and return a JWT bearer token.
+     * Accepts either `user_id` (e.g., 000001) or `email` (e.g., admin@capital.com).
      *
-     * @bodyParam user_id string required User login ID. Example: 000001
-     * @bodyParam password string required User password. Example: password
+     * @bodyParam user_id string User login ID. Example: 000001
+     * @bodyParam email string User email address. Example: admin@capital.com
+     * @bodyParam password string required User password. Example: admin
      *
      * @throws ValidationException
      */
@@ -34,21 +36,37 @@ class AuthApiController extends Controller
     public function login(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'user_id' => ['required', 'string'],
+            'user_id' => ['nullable', 'string'],
+            'email' => ['nullable', 'string'],
             'password' => ['required', 'string'],
         ]);
 
+        // Must provide at least one identifier
+        if (empty($validated['user_id']) && empty($validated['email'])) {
+            throw ValidationException::withMessages([
+                'user_id' => ['Please provide either user_id or email.'],
+            ]);
+        }
+
+        // Resolve user_id from email if needed
+        $userId = $validated['user_id'] ?? null;
+
+        if (!$userId && !empty($validated['email'])) {
+            $user = User::where('email', $validated['email'])->first();
+            if (!$user) {
+                throw ValidationException::withMessages([
+                    'email' => ['No account found with this email address.'],
+                ]);
+            }
+            $userId = $user->user_id;
+        }
+
         $credentials = [
-            'user_id' => $validated['user_id'],
+            'user_id' => $userId,
             'password' => $validated['password'],
             'is_active' => User::ACTIVE,
         ];
 
-        // Existing SQL Server data uses bcrypt hashes in password_hash.
-        // Laravel remains compatible through User::getAuthPassword().
-        // Future Argon2id upgrade path: rehash after successful login when
-        // Hash::needsRehash($user->password_hash) is true and the hash driver
-        // has been changed to argon2id in config/hashing.php.
         $token = $this->apiGuard()->attempt($credentials);
 
         if (! is_string($token)) {
