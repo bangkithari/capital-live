@@ -503,7 +503,8 @@ return new class extends Migration
             return;
         }
 
-        DB::statement('CREATE UNIQUE INDEX UX_cif_address_primary_mysql ON cif_address ((CASE WHEN is_primary = 1 THEN cif_id ELSE NULL END))');
+        // MariaDB workaround: skip functional index (not supported on 10.x)
+// DB::statement('CREATE UNIQUE INDEX UX_cif_address_primary_mysql ON cif_address ((CASE WHEN is_primary = 1 THEN cif_id ELSE NULL END))');
         DB::statement('ALTER TABLE aplikasi_ahli_waris ADD CONSTRAINT CK_aplikasi_ahli_waris_persentase CHECK (persentase > 0 AND persentase <= 100)');
         DB::statement("ALTER TABLE aplikasi_cif ADD CONSTRAINT CK_aplikasi_cif_jenis_kelamin CHECK (jenis_kelamin IS NULL OR jenis_kelamin IN ('W', 'P'))");
         DB::statement("ALTER TABLE cif ADD CONSTRAINT CK_cif_jenis_kelamin CHECK (jenis_kelamin IN ('W', 'P'))");

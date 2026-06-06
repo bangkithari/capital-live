@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HasHashid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Route;
 
 class Menu extends Model
 {
-    use HasFactory;
+    use HasFactory, HasHashid;
 
     public const ACTIVE = true;
     public const INACTIVE = false;
@@ -133,14 +134,22 @@ class Menu extends Model
             return false;
         }
 
+        // Admin sees everything
         if ($user->isAdmin()) {
             return true;
         }
 
+        // Public menu (menu_type is null) → visible to all
+        if (blank($this->menu_type)) {
+            return true;
+        }
+
+        // Check role_department_menu table for role+department access
         if ($this->hasDirectAccessFor($user)) {
             return true;
         }
 
+        // Check if any child is visible (parent visible if child is)
         return $this->activeChildren()
             ->get()
             ->contains(fn (Menu $child) => $child->isVisibleToRole($user));

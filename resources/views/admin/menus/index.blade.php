@@ -36,7 +36,7 @@
                         <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Name / Code</th>
                         <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">URL</th>
                         <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Handler / Type</th>
-                        <th class="px-5 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider w-24">Status</th>
+                        <th class="px-5 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider w-20">Status</th>
                         <th class="px-5 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider w-32">Actions</th>
                     </tr>
                 </thead>
@@ -64,36 +64,20 @@
                                 <div class="text-xs text-slate-400">{{ $menu->menu_type ?? 'public' }}</div>
                             </td>
                             <td class="px-5 py-3 text-center">
-                                <button @click="toggleActive({{ $menu->id }})"
-                                        class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                                        :class="{{ $menu->is_active ? 'bg-emerald-500' : 'bg-slate-300' }}">
-                                    <span class="inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform duration-200"
-                                          :class="{{ $menu->is_active ? 'translate-x-6' : 'translate-x-1' }}"></span>
-                                </button>
+                                @if($menu->is_active)
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Active</span>
+                                @else
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-500">Inactive</span>
+                                @endif
                             </td>
                             <td class="px-5 py-3 text-right">
                                 <div class="flex items-center justify-end space-x-1">
-                                    <button @click='openEditModal(@js([
-                                        "id" => $menu->id,
-                                        "name" => $menu->name,
-                                        "code" => $menu->code,
-                                        "url" => $menu->url,
-                                        "controller" => $menu->controller,
-                                        "action" => $menu->action,
-                                        "param" => $menu->param,
-                                        "icon" => $menu->icon,
-                                        "sort_order" => $menu->sort_order,
-                                        "parent_id" => $menu->parent_id,
-                                        "menu_type" => $menu->menu_type,
-                                        "stored_procedure" => $menu->stored_procedure,
-                                        "params_json" => $menu->params_json,
-                                        "is_active" => (bool) $menu->is_active,
-                                    ]))'
+                                    <button x-on:click="editMenu('{{ $menu->hashid }}')"
                                             class="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all"
                                             title="Edit">
                                         <i data-lucide="pencil" class="w-4 h-4"></i>
                                     </button>
-                                    <button @click="deleteMenu({{ $menu->id }}, '{{ addslashes($menu->name) }}')"
+                                    <button @click="deleteMenu('{{ $menu->hashid }}', '{{ addslashes($menu->name) }}')"
                                             class="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all"
                                             title="Delete">
                                         <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -129,36 +113,20 @@
                                     <div class="text-xs text-slate-400">{{ $child->menu_type ?? 'public' }}</div>
                                 </td>
                                 <td class="px-5 py-2.5 text-center">
-                                    <button @click="toggleActive({{ $child->id }})"
-                                            class="relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                                            :class="{{ $child->is_active ? 'bg-emerald-500' : 'bg-slate-300' }}">
-                                        <span class="inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-200"
-                                              :class="{{ $child->is_active ? 'translate-x-[18px]' : 'translate-x-[3px]' }}"></span>
-                                    </button>
+                                    @if($child->is_active)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Active</span>
+                                    @else
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-500">Inactive</span>
+                                    @endif
                                 </td>
                                 <td class="px-5 py-2.5 text-right">
                                     <div class="flex items-center justify-end space-x-1">
-                                        <button @click='openEditModal(@js([
-                                            "id" => $child->id,
-                                            "name" => $child->name,
-                                            "code" => $child->code,
-                                            "url" => $child->url,
-                                            "controller" => $child->controller,
-                                            "action" => $child->action,
-                                            "param" => $child->param,
-                                            "icon" => $child->icon,
-                                            "sort_order" => $child->sort_order,
-                                            "parent_id" => $child->parent_id,
-                                            "menu_type" => $child->menu_type,
-                                            "stored_procedure" => $child->stored_procedure,
-                                            "params_json" => $child->params_json,
-                                            "is_active" => (bool) $child->is_active,
-                                        ]))'
+                                        <button x-on:click="editMenu('{{ $child->hashid }}')"
                                                 class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all"
                                                 title="Edit">
                                             <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
                                         </button>
-                                        <button @click="deleteMenu({{ $child->id }}, '{{ addslashes($child->name) }}')"
+                                        <button @click="deleteMenu('{{ $child->hashid }}', '{{ addslashes($child->name) }}')"
                                                 class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all"
                                                 title="Delete">
                                             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
@@ -222,7 +190,7 @@
                 </div>
 
                 <!-- Modal Body -->
-                <form :action="editMode ? `/admin/menus/${form.id}` : '{{ route("admin.menus.store") }}'" method="POST" class="p-6 space-y-5">
+                <form :action="editMode ? `/admin/menus/${form.hashid}` : '{{ route('admin.menus.store') }}'" method="POST" class="p-6 space-y-5">
                     <template x-if="editMode">
                         <input type="hidden" name="_method" value="PUT">
                     </template>
@@ -368,7 +336,7 @@
                             class="px-5 py-2.5 bg-slate-100 text-slate-600 text-sm font-semibold rounded-xl hover:bg-slate-200 transition-colors">
                         Cancel
                     </button>
-                    <form :action="`/admin/menus/${deleteTarget.id}`" method="POST">
+                    <form :action="`/admin/menus/${deleteTarget.hashid}`" method="POST">
                         @csrf
                         @method('DELETE')
                         <button type="submit"
@@ -384,6 +352,9 @@
 
 @push('scripts')
 <script>
+// Store all menu data globally for edit modal
+window.menuData = @json($menuData);
+
 function menuManager() {
     return {
         showModal: false,
@@ -419,10 +390,13 @@ function menuManager() {
             });
         },
 
-        openEditModal(menu) {
+        editMenu(hashid) {
+            var menu = window.menuData.find(function(m) { return m.hashid === hashid; });
+            if (!menu) return;
             this.editMode = true;
             this.form = {
                 id: menu.id,
+                hashid: menu.hashid,
                 name: menu.name || '',
                 code: menu.code || '',
                 url: menu.url || '',
@@ -445,28 +419,10 @@ function menuManager() {
             });
         },
 
-        deleteMenu(id, name) {
-            this.deleteTarget = { id, name };
+        deleteMenu(hashid, name) {
+            this.deleteTarget = { hashid: hashid, name: name };
             this.showDeleteModal = true;
             this.$nextTick(() => { if (typeof lucide !== 'undefined') lucide.createIcons(); });
-        },
-
-        async toggleActive(id) {
-            try {
-                const resp = await fetch(`/admin/menus/${id}/toggle`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (resp.ok) {
-                    location.reload();
-                }
-            } catch (e) {
-                console.error(e);
-            }
         },
 
         async saveOrder() {
@@ -493,7 +449,6 @@ function menuManager() {
         },
 
         init() {
-            // jQuery UI Sortable
             if (typeof $ !== 'undefined' && typeof $.fn.sortable !== 'undefined') {
                 $('#sortable-parent').sortable({
                     handle: '.drag-handle',
@@ -528,7 +483,6 @@ function initSemanticParentMenu() {
     });
 }
 
-// Init Lucide after DOM ready
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof lucide !== 'undefined') lucide.createIcons();
     initSemanticParentMenu();

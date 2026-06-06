@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\RoleAccessController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\CifController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,8 +22,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cif', [CifController::class, 'index'])->name('cif.index');
     Route::get('/cif/{cif}', [CifController::class, 'show'])->name('cif.show');
 
-    // Admin Menu Management
-    Route::prefix('admin/menus')->name('admin.menus.')->middleware('admin')->group(function () {
+    // Reports
+    Route::get('/reports', [ReportsController::class, 'index'])->name('reports.index');
+
+    // Admin Menu Management — menu-access checks role_department_menu
+    Route::prefix('admin/menus')->name('admin.menus.')->middleware('menu-access')->group(function () {
         Route::post('/reorder', [MenuController::class, 'reorder'])->name('reorder');
         Route::post('/{menu}/toggle', [MenuController::class, 'toggle'])->name('toggle');
         Route::get('/', [MenuController::class, 'index'])->name('index');
@@ -33,16 +37,18 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{menu}', [MenuController::class, 'destroy'])->name('destroy');
     });
 
+    // User Management — menu-access checks role_department_menu
     Route::resource('admin/users', UserController::class)
-        ->middleware('admin')
+        ->middleware('menu-access')
         ->names('admin.users')
         ->except(['show']);
 
+    // Role Access — menu-access checks role_department_menu
     Route::get('/admin/role-access', [RoleAccessController::class, 'index'])
-        ->middleware('admin')
+        ->middleware('menu-access')
         ->name('admin.role-access.index');
     Route::put('/admin/role-access', [RoleAccessController::class, 'update'])
-        ->middleware('admin')
+        ->middleware('menu-access')
         ->name('admin.role-access.update');
 
     // Profile (Breeze default)

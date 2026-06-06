@@ -1,5 +1,7 @@
 @php
-    $allowedRoles = $menu->allowed_roles;
+    // Use roleAccessMap (from role_department_menu table) for accurate display
+    $menuRoleIds = $roleAccessMap[$menu->id] ?? collect();
+    $allowedRoles = $roles->filter(fn ($role) => $menuRoleIds->contains($role->id))->pluck('name')->toArray();
     $isPublic = blank($menu->menu_type);
 @endphp
 

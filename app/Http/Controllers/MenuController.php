@@ -18,7 +18,26 @@ class MenuController extends Controller
 
         $parents = Menu::whereNull('parent_id')->orderBy('name')->get();
 
-        return view('admin.menus.index', compact('menus', 'parents'));
+        // Prepare flat menu data with hashid for JS
+        $menuData = $menus->flatMap(fn ($m) => collect([$m])->merge($m->children))->map(fn ($m) => [
+            'id' => $m->id,
+            'hashid' => $m->hashid,
+            'name' => $m->name,
+            'code' => $m->code,
+            'url' => $m->url,
+            'controller' => $m->controller,
+            'action' => $m->action,
+            'param' => $m->param,
+            'icon' => $m->icon,
+            'sort_order' => $m->sort_order,
+            'parent_id' => $m->parent_id,
+            'menu_type' => $m->menu_type,
+            'stored_procedure' => $m->stored_procedure,
+            'params_json' => $m->params_json,
+            'is_active' => $m->is_active,
+        ])->values();
+
+        return view('admin.menus.index', compact('menus', 'parents', 'menuData'));
     }
 
     public function create()
@@ -39,7 +58,7 @@ class MenuController extends Controller
             'icon' => 'nullable|string|max:100',
             'parent_id' => 'nullable|exists:menus,id',
             'sort_order' => 'nullable|integer|min:0',
-            'menu_type' => 'nullable|string|max:20',
+            'menu_type' => 'nullable|string|max:255',
             'stored_procedure' => 'nullable|string|max:200',
             'params_json' => 'nullable|json',
             'is_active' => 'nullable|boolean',
@@ -81,7 +100,7 @@ class MenuController extends Controller
             'icon' => 'nullable|string|max:100',
             'parent_id' => 'nullable|exists:menus,id',
             'sort_order' => 'nullable|integer|min:0',
-            'menu_type' => 'nullable|string|max:20',
+            'menu_type' => 'nullable|string|max:255',
             'stored_procedure' => 'nullable|string|max:200',
             'params_json' => 'nullable|json',
             'is_active' => 'nullable|boolean',
