@@ -9,6 +9,7 @@ use Dedoc\Scramble\Attributes\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\JWTGuard;
 
@@ -48,32 +49,22 @@ class AuthApiController extends Controller
             ]);
         }
 
-        // Resolve user_id from email if needed
-        $userId = $validated['user_id'] ?? null;
+        // Single query: find by email OR user_id (same as web LoginRequest)
+        $identifier = $validated['user_id'] ?? $validated['email'];
+        $user = User::query()
+            ->where('email', $identifier)
+            ->orWhere('user_id', $identifier)
+            ->first();
 
-        if (!$userId && !empty($validated['email'])) {
-            $user = User::where('email', $validated['email'])->first();
-            if (!$user) {
-                throw ValidationException::withMessages([
-                    'email' => ['No account found with this email address.'],
-                ]);
-            }
-            $userId = $user->user_id;
-        }
-
-        $credentials = [
-            'user_id' => $userId,
-            'password' => $validated['password'],
-            'is_active' => User::ACTIVE,
-        ];
-
-        $token = $this->apiGuard()->attempt($credentials);
-
-        if (! is_string($token)) {
+        // Validate: user exists, active, password matches
+        if (! $user || ! $user->is_active || ! Hash::check($validated['password'], $user->getAuthPassword())) {
             throw ValidationException::withMessages([
                 'user_id' => ['The provided credentials are incorrect or the account is inactive.'],
             ]);
         }
+
+        // Generate token directly (1 query via attempt, no double lookup)
+        $token = $this->apiGuard()->login($user);
 
         return $this->respondWithToken($token);
     }
