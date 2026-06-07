@@ -27,7 +27,7 @@ class CifApiController extends Controller
         }
 
         return CifResource::collection(
-            $query->orderBy('created_at', 'desc')->paginate($request->integer('per_page', 15))
+            $query->orderBy('created_at', 'desc')->paginate($request->integer('per_page', config('cpital.per_page', 15)))
         );
     }
 

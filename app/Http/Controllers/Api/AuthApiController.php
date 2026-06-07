@@ -57,7 +57,7 @@ class AuthApiController extends Controller
         // Rate limiting: 5 attempts per minute per identifier+IP
         $throttleKey = Str::transliterate(Str::lower($identifier) . '|' . $request->ip());
 
-        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+        if (RateLimiter::tooManyAttempts($throttleKey, (int) config('cpital.auth_max_attempts', 5))) {
             $seconds = RateLimiter::availableIn($throttleKey);
 
             throw ValidationException::withMessages([
@@ -73,7 +73,7 @@ class AuthApiController extends Controller
 
         // Validate: user exists, active, password matches
         if (! $user || ! $user->is_active || ! Hash::check($validated['password'], $user->getAuthPassword())) {
-            RateLimiter::hit($throttleKey, 60);
+            RateLimiter::hit($throttleKey, (int) config('cpital.auth_decay_seconds', 60));
 
             throw ValidationException::withMessages([
                 'user_id' => ['The provided credentials are incorrect or the account is inactive.'],

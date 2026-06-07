@@ -30,7 +30,7 @@ trait HasHashid
             // If primary key is string (like user_id = "000001"), format with leading zeros
             if ($this->keyType === 'string' && is_int($value)) {
                 // Use 6-digit padding (matches user_id format)
-                $value = str_pad($value, 6, '0', STR_PAD_LEFT);
+                $value = str_pad($value, (int) config('cpital.generated_user_id_length', 6), '0', STR_PAD_LEFT);
             }
         }
 

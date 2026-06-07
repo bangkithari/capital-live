@@ -8,6 +8,13 @@ return [
 
     'default_department_name' => env('CPITAL_DEFAULT_DEPARTMENT_NAME', 'IT'),
 
+    // Auth rate limiting
+    'auth_max_attempts' => (int) env('CPITAL_AUTH_MAX_ATTEMPTS', 5),
+    'auth_decay_seconds' => (int) env('CPITAL_AUTH_DECAY_SECONDS', 60),
+
+    // Pagination
+    'per_page' => (int) env('CPITAL_PER_PAGE', 15),
+
     'role_badges' => [
         'Administrator' => ['bg' => 'bg-violet-100 text-violet-700 border-violet-200', 'label' => 'Administrator'],
         'Division Head' => ['bg' => 'bg-blue-100 text-blue-700 border-blue-200', 'label' => 'Division Head'],
@@ -17,5 +24,3 @@ return [
         'Direktur' => ['bg' => 'bg-amber-100 text-amber-700 border-amber-200', 'label' => 'Direktur'],
     ],
 ];
-
-

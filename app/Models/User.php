@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Department;
 use App\Traits\HasHashid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -23,10 +24,22 @@ class User extends Authenticatable implements JWTSubject
 
     public $timestamps = true;
 
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (User $user) {
+            if (empty($user->department_id)) {
+                $user->department_id = Department::firstOrCreate(
+                    ['code' => config('cpital.default_department_code')],
+                    ['name' => config('cpital.default_department_name')]
+                )->id;
+            }
+        });
+    }
+
     protected $fillable = [
         'user_id',
-        'department_id',
-        'role_id',
         'password_hash',
         'full_name',
         'name',
@@ -34,6 +47,7 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'role',
         'is_active',
+        'department_id',
         'password_expiry_date',
     ];
 

@@ -29,17 +29,31 @@
     </div>
 </div>
 
-<div>
-    <label for="role" class="block text-sm font-semibold text-slate-700 mb-1.5">Role <span class="text-rose-500">*</span></label>
-    <select name="role" id="role" required data-placeholder="Select role"
-            class="js-enhanced-select w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all">
-        @foreach ($roles as $role)
-            <option value="{{ $role->name }}" @selected(old('role', $user?->role ?? config('cpital.default_role_name')) === $role->name)>
-                {{ ucfirst($role->name) }}
-            </option>
-        @endforeach
-    </select>
-    @error('role') <p class="mt-1 text-sm text-rose-500">{{ $message }}</p> @enderror
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+        <label for="role" class="block text-sm font-semibold text-slate-700 mb-1.5">Role <span class="text-rose-500">*</span></label>
+        <select name="role" id="role" required data-placeholder="Select role"
+                class="js-enhanced-select w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all">
+            @foreach ($roles as $role)
+                <option value="{{ $role->name }}" @selected(old('role', $user?->role ?? config('cpital.default_role_name')) === $role->name)>
+                    {{ ucfirst($role->name) }}
+                </option>
+            @endforeach
+        </select>
+        @error('role') <p class="mt-1 text-sm text-rose-500">{{ $message }}</p> @enderror
+    </div>
+    <div>
+        <label for="department_id" class="block text-sm font-semibold text-slate-700 mb-1.5">Department <span class="text-rose-500">*</span></label>
+        <select name="department_id" id="department_id" required data-placeholder="Select department"
+                class="js-enhanced-select w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all">
+            @foreach ($departments as $dept)
+                <option value="{{ $dept->id }}" @selected(old('department_id', $user?->department_id ?? config('cpital.default_department_code')) == $dept->id)>
+                    {{ $dept->name }} ({{ $dept->code }})
+                </option>
+            @endforeach
+        </select>
+        @error('department_id') <p class="mt-1 text-sm text-rose-500">{{ $message }}</p> @enderror
+    </div>
 </div>
 
 <div class="flex items-center">

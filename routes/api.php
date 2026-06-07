@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CifApiController;
 use App\Http\Controllers\Api\DashboardApiController;
 use App\Http\Controllers\Api\HealthApiController;
 use App\Http\Controllers\Api\MenuApiController;
+use App\Http\Controllers\Api\UserApiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,5 +47,9 @@ Route::prefix('v1')->group(function () {
             ->name('api.menus.index');
         Route::get('/menus/tree', [MenuApiController::class, 'tree'])
             ->name('api.menus.tree');
+
+        // Users
+        Route::post('/users', [UserApiController::class, 'store'])
+            ->name('api.users.store');
     });
 });

@@ -25,6 +25,7 @@
                         <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Name</th>
                         <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Email</th>
                         <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Role</th>
+                        <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Department</th>
                         <th class="px-5 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
                         <th class="px-5 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
                     </tr>
@@ -49,6 +50,7 @@
                                     {{ $user->role_badge['label'] }}
                                 </span>
                             </td>
+                            <td class="px-5 py-4 text-sm text-slate-600">{{ $user->department->name ?? "-" }}</td>
                             <td class="px-5 py-4 text-center">
                                 @if ($user->is_active)
                                     <span class="inline-flex items-center px-2.5 py-1 text-xs font-semibold text-emerald-600 bg-emerald-50 rounded-full border border-emerald-200">Active</span>
@@ -78,7 +80,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-5 py-12 text-center text-sm text-slate-400">No users found.</td>
+                            <td colspan="6" class="px-5 py-12 text-center text-sm text-slate-400">No users found.</td>
                         </tr>
                     @endforelse
                 </tbody>

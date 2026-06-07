@@ -15,7 +15,7 @@
             <form action="{{ route('admin.users.update', $user) }}" method="POST" class="p-6 space-y-5">
                 @csrf
                 @method('PUT')
-                @include('admin.users.partials.form', ['user' => $user, 'roles' => $roles])
+                @include('admin.users.partials.form', ['user' => $user, 'roles' => $roles, 'departments' => $departments])
 
                 <div class="flex items-center space-x-3 pt-4 border-t border-slate-100">
                     <button type="submit" class="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition-colors">

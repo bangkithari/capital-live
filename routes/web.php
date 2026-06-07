@@ -43,6 +43,12 @@ Route::middleware(['auth'])->group(function () {
         ->names('admin.users')
         ->except(['show']);
 
+    // User Management v2 (AJAX)
+    Route::prefix('admin/users-v2')->name('admin.users.')->middleware('menu-access')->group(function () {
+        Route::get('/create', [UserController::class, 'createV2'])->name('create-v2');
+        Route::post('/', [UserController::class, 'storeV2'])->name('store-v2');
+    });
+
     // Role Access — menu-access checks role_department_menu
     Route::get('/admin/role-access', [RoleAccessController::class, 'index'])
         ->middleware('menu-access')
