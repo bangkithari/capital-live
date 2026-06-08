@@ -11,9 +11,10 @@
         "laravel/framework": "^13.8",
         "laravel/tinker": "^3.0",
         "tymon/jwt-auth": "^2.3",
-        "vinkla/hashids": "^14.0"
+        "vinkla/hashids": "14.0"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.7",
         "fakerphp/faker": "^1.23",
         "laravel/breeze": "^2.4",
         "laravel/pail": "^1.2.5",

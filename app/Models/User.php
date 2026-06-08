@@ -9,6 +9,46 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * @property string $user_id
+ * @property int $department_id
+ * @property int $role_id
+ * @property string $password_hash
+ * @property string|null $full_name
+ * @property string|null $email
+ * @property string|null $remember_token
+ * @property bool $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $password_expiry_date
+ * @property-read Department|null $department
+ * @property-read string $hashid
+ * @property-read string|null $id
+ * @property-read string $initials
+ * @property string|null $name
+ * @property string|null $password
+ * @property string $role
+ * @property-read array $role_badge
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \App\Models\Role|null $roleModel
+ * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereDepartmentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereFullName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePasswordExpiryDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePasswordHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRoleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUserId($value)
+ * @mixin \Eloquent
+ */
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, HasHashid;
@@ -64,7 +104,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function getAuthPassword(): string
     {
-        return $this->password_hash;
+        return $this->normalizeBcryptHash($this->password_hash);
     }
 
     public function getJWTIdentifier()
@@ -99,12 +139,23 @@ class User extends Authenticatable implements JWTSubject
 
     public function getPasswordAttribute(): ?string
     {
-        return $this->password_hash;
+        return $this->normalizeBcryptHash($this->password_hash);
     }
 
     public function setPasswordAttribute(string $value): void
     {
         $this->attributes['password_hash'] = $value;
+    }
+
+    private function normalizeBcryptHash(?string $value): string
+    {
+        $hash = trim((string) $value);
+
+        if (preg_match('/^\$2a\$(\d{2}\$[\.\/A-Za-z0-9]{53})$/', $hash, $matches) === 1) {
+            return '$2y$' . $matches[1];
+        }
+
+        return $hash;
     }
 
     public function getRoleAttribute(): string

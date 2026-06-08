@@ -7,6 +7,55 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Route;
 
+/**
+ * @property int $id
+ * @property int|null $parent_id
+ * @property string $name
+ * @property string $code
+ * @property string|null $url
+ * @property string|null $controller
+ * @property string|null $action
+ * @property string|null $route_name
+ * @property int|null $param
+ * @property string|null $icon
+ * @property int|null $sort_order
+ * @property bool|null $is_active
+ * @property string|null $menu_type
+ * @property string|null $stored_procedure
+ * @property string|null $params_json
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Menu> $activeChildren
+ * @property-read int|null $active_children_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Menu> $children
+ * @property-read int|null $children_count
+ * @property-read array $allowed_roles
+ * @property-read string $hashid
+ * @property int|null $order
+ * @property string|null $permission
+ * @property-read string|null $resolved_url
+ * @property string|null $slug
+ * @property-read Menu|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\RoleDepartmentMenu> $roleAccesses
+ * @property-read int|null $role_accesses_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereAction($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereController($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereIcon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereMenuType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereParam($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereParamsJson($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereRouteName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereSortOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereStoredProcedure($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Menu whereUrl($value)
+ * @mixin \Eloquent
+ */
 class Menu extends Model
 {
     use HasFactory, HasHashid;
@@ -169,7 +218,7 @@ class Menu extends Model
         if ($user->isAdmin()) {
             return static::whereNull('parent_id')
                 ->where('is_active', self::ACTIVE)
-                ->with(['activeChildren' => fn ($query) => $query->where('is_active', self::ACTIVE)->orderBy('sort_order')])
+                ->with(['activeChildren' => fn ($query) => $query->where('is_active', self::ACTIVE)])
                 ->orderBy('sort_order')
                 ->get()
                 ->map(function (Menu $menu) {

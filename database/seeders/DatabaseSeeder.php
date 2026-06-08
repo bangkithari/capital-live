@@ -9,22 +9,26 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::statement('EXEC sp_MSforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT ALL"');
+        DB::table('role_department_menu')->delete();
+        DB::table('users')->delete();
+        DB::table('menus')->delete();
+        DB::table('master_produk_plan')->delete();
+        DB::table('master_produk')->delete();
+        DB::table('master_negara')->delete();
+        DB::table('master_lookup')->delete();
+        DB::table('roles')->delete();
+        DB::table('departments')->delete();
 
-        try {
-            $this->call([
-                DepartmentSeeder::class,
-                RoleSeeder::class,
-                MasterLookupSeeder::class,
-                MasterNegaraSeeder::class,
-                MasterProdukSeeder::class,
-                MasterProdukPlanSeeder::class,
-                MenuSeeder::class,
-                RoleDepartmentMenuSeeder::class,
-                UserSeeder::class,
-            ]);
-        } finally {
-            DB::statement('EXEC sp_MSforeachtable "ALTER TABLE ? WITH CHECK CHECK CONSTRAINT ALL"');
-        }
+        $this->call([
+            DepartmentSeeder::class,
+            RoleSeeder::class,
+            MasterLookupSeeder::class,
+            MasterNegaraSeeder::class,
+            MasterProdukSeeder::class,
+            MasterProdukPlanSeeder::class,
+            MenuSeeder::class,
+            RoleDepartmentMenuSeeder::class,
+            UserSeeder::class,
+        ]);
     }
 }

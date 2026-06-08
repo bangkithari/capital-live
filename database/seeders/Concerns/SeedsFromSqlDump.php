@@ -3,7 +3,6 @@
 namespace Database\Seeders\Concerns;
 
 use Illuminate\Support\Facades\DB;
-use PDO;
 use RuntimeException;
 
 trait SeedsFromSqlDump
@@ -16,48 +15,16 @@ trait SeedsFromSqlDump
             return;
         }
 
-        $pdo = DB::connection()->getPdo();
-
         if ($usesIdentityInsert) {
-            $pdo->exec("SET IDENTITY_INSERT [{$table}] ON");
+            DB::connection()->getPdo()->exec("SET IDENTITY_INSERT [{$table}] ON");
         }
 
         try {
-            $pdo->beginTransaction();
-
-            try {
-                $pdo->exec("DELETE FROM [{$table}]");
-
-                foreach ($rows as $row) {
-                    $columns = array_map(
-                        static fn (string $column): string => "[{$column}]",
-                        array_keys($row)
-                    );
-
-                    $values = array_map(
-                        fn (mixed $value): string => $this->sqlLiteral($pdo, $value),
-                        array_values($row)
-                    );
-
-                    $pdo->exec(sprintf(
-                        'INSERT INTO [%s] (%s) VALUES (%s)',
-                        $table,
-                        implode(', ', $columns),
-                        implode(', ', $values)
-                    ));
-                }
-
-                $pdo->commit();
-            } catch (\Throwable $throwable) {
-                if ($pdo->inTransaction()) {
-                    $pdo->rollBack();
-                }
-
-                throw $throwable;
-            }
+            DB::table($table)->delete();
+            DB::table($table)->insert($rows);
         } finally {
             if ($usesIdentityInsert) {
-                $pdo->exec("SET IDENTITY_INSERT [{$table}] OFF");
+                DB::connection()->getPdo()->exec("SET IDENTITY_INSERT [{$table}] OFF");
             }
         }
     }
@@ -67,34 +34,28 @@ trait SeedsFromSqlDump
      */
     protected function rowsFromSqlDump(string $table): array
     {
-        $path = base_path('script.sql');
+        $path = base_path('cpital_live_data.txt');
 
         if (! is_file($path)) {
-            throw new RuntimeException('script.sql not found at project root.');
+            throw new RuntimeException('cpital_live_data.txt not found at project root.');
         }
 
         $sql = file_get_contents($path);
 
         if ($sql === false) {
-            throw new RuntimeException('Unable to read script.sql.');
-        }
-
-        if (str_starts_with($sql, "\xFF\xFE")) {
-            $sql = mb_convert_encoding(substr($sql, 2), 'UTF-8', 'UTF-16LE');
-        } elseif (str_starts_with($sql, "\xFE\xFF")) {
-            $sql = mb_convert_encoding(substr($sql, 2), 'UTF-8', 'UTF-16BE');
+            throw new RuntimeException('Unable to read cpital_live_data.txt.');
         }
 
         $rows = [];
         $lines = preg_split('/\R/u', $sql) ?: [];
 
         foreach ($lines as $line) {
-            if (! preg_match('/^INSERT \[dbo\]\.\[' . preg_quote($table, '/') . '\] \((?<columns>.+)\) VALUES \((?<values>.+)\)$/u', $line, $match)) {
+            if (! preg_match('/^INSERT INTO `' . preg_quote($table, '/') . '` \((?<columns>.+)\) VALUES \((?<values>.+)\);$/u', $line, $match)) {
                 continue;
             }
 
             $columns = array_map(
-                fn (string $column): string => trim($column, " []"),
+                fn (string $column): string => trim($column, " `"),
                 explode(',', $match['columns'])
             );
 
@@ -103,10 +64,14 @@ trait SeedsFromSqlDump
                 $this->splitValues($match['values'])
             );
 
-            $rows[] = array_combine($columns, $values);
+            $combined = array_combine($columns, $values);
+
+            if ($combined !== false) {
+                $rows[] = $combined;
+            }
         }
 
-        return array_values(array_filter($rows, static fn ($row): bool => is_array($row)));
+        return $rows;
     }
 
     /**
@@ -162,16 +127,11 @@ trait SeedsFromSqlDump
             return null;
         }
 
-        if (preg_match("/^CAST\\(N?'(?<date>[^']+)' AS DateTime\\)$/u", $value, $match)) {
-            return str_replace('T', ' ', $match['date']);
-        }
+        if (preg_match("/^N?'(?<text>(?:[^'\\\\]|\\\\.|'')*)'$/u", $value, $match)) {
+            $text = str_replace("\\'", "'", $match['text']);
+            $text = str_replace("''", "'", $text);
 
-        if (preg_match('/^CAST\((?<number>[-0-9.]+) AS Decimal\(\d+,\s*\d+\)\)$/u', $value, $match)) {
-            return $match['number'];
-        }
-
-        if (preg_match("/^N?'(?<text>(?:[^']|'')*)'$/u", $value, $match)) {
-            return str_replace("''", "'", $match['text']);
+            return $text;
         }
 
         if (preg_match('/^-?\d+$/', $value)) {
@@ -179,32 +139,17 @@ trait SeedsFromSqlDump
         }
 
         if (preg_match('/^-?\d+\.\d+$/', $value)) {
-            return $value;
+            return (float) $value;
         }
 
-        if (preg_match('/^0x[0-9A-F]+$/i', $value)) {
-            $decoded = hex2bin(substr($value, 2));
+        if (str_starts_with($value, 'b\'') && str_ends_with($value, '\'')) {
+            return trim($value, "b'");
+        }
 
-            return $decoded === false ? $value : $decoded;
+        if (preg_match('/^CAST\((?<number>[-0-9.]+) AS Decimal\(\d+,\s*\d+\)\)$/u', $value, $match)) {
+            return (float) $match['number'];
         }
 
         return $value;
-    }
-
-    protected function sqlLiteral(PDO $pdo, mixed $value): string
-    {
-        if ($value === null) {
-            return 'NULL';
-        }
-
-        if (is_bool($value)) {
-            return $value ? '1' : '0';
-        }
-
-        if (is_int($value) || is_float($value)) {
-            return (string) $value;
-        }
-
-        return $pdo->quote((string) $value);
     }
 }
