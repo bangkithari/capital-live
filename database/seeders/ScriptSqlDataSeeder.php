@@ -34,14 +34,32 @@ class ScriptSqlDataSeeder extends Seeder
         $tables = array_values(array_unique(array_column($inserts, 'table')));
 
         $this->withoutForeignKeyChecks(function () use ($tables, $inserts) {
+            $driver = DB::getDriverName();
+
             foreach (array_reverse($tables) as $table) {
                 DB::table($table)->delete();
             }
 
             foreach ($inserts as $insert) {
+                if ($driver === 'sqlsrv') {
+                    try {
+                        DB::statement("SET IDENTITY_INSERT [{$insert['table']}] ON");
+                    } catch (\Exception $e) {
+                        // Table doesn't have identity column, skip
+                    }
+                }
+
                 DB::table($insert['table'])->insert(
                     array_combine($insert['columns'], $insert['values'])
                 );
+
+                if ($driver === 'sqlsrv') {
+                    try {
+                        DB::statement("SET IDENTITY_INSERT [{$insert['table']}] OFF");
+                    } catch (\Exception $e) {
+                        // Table doesn't have identity column, skip
+                    }
+                }
             }
         });
     }
@@ -281,6 +299,8 @@ class ScriptSqlDataSeeder extends Seeder
             DB::statement('SET FOREIGN_KEY_CHECKS=0');
         } elseif ($driver === 'sqlite') {
             DB::statement('PRAGMA foreign_keys = OFF');
+        } elseif ($driver === 'sqlsrv') {
+            DB::statement('EXEC sp_MSforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT ALL"');
         }
 
         try {
@@ -290,6 +310,8 @@ class ScriptSqlDataSeeder extends Seeder
                 DB::statement('SET FOREIGN_KEY_CHECKS=1');
             } elseif ($driver === 'sqlite') {
                 DB::statement('PRAGMA foreign_keys = ON');
+            } elseif ($driver === 'sqlsrv') {
+                DB::statement('EXEC sp_MSforeachtable "ALTER TABLE ? WITH CHECK CHECK CONSTRAINT ALL"');
             }
         }
     }
